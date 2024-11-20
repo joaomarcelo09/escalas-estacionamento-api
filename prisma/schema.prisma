@@ -19,3 +19,9 @@ model User {
   email    String
   password String
 }
+
+model Cooperators {
+  id        String @id
+  name      String
+  telephone String
+}
