@@ -4,17 +4,17 @@ import { CreateCooperatorDto } from './dto/create-cooperator-dto';
 
 @Injectable()
 export class CooperatorService {
-  constructor(private repository: CooperatorRepository){}
+  constructor(private repository: CooperatorRepository) {}
 
   async create(coop: CreateCooperatorDto) {
-    return this.repository.create(coop)
+    return this.repository.create(coop);
   }
 
   async delete(id: string) {
-    return this.repository.delete(id)
+    return this.repository.delete(id);
   }
 
   async findAll() {
-    return this.repository.findAll()
+    return this.repository.findAll();
   }
 }
