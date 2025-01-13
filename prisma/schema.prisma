@@ -21,7 +21,13 @@ model User {
 }
 
 model Cooperators {
-  id        String @id
+  id        String          @id
   name      String
   telephone String
+  type      CooperatorsType @default(COOPERATOR)
+}
+
+enum CooperatorsType {
+  DEACUN
+  COOPERATOR
 }
