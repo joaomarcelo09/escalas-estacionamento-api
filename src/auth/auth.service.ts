@@ -27,7 +27,7 @@ export class AuthService {
 
     const where = { email: user.email }
 
-    const findUser = await this.userService.findOne(where)
+    const findUser = await this.userService.findOne({where})
 
     if(!findUser) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
 
