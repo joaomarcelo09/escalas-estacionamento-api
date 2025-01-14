@@ -6,13 +6,15 @@ import { PrismaCooperatorRepository } from 'src/database/repositories/prisma-coo
 import { PrismaService } from 'src/database/prisma-service';
 
 @Module({
+  providers: [
+    {
+      provide: CooperatorRepository,
+      useClass: PrismaCooperatorRepository,
+    },
+    CooperatorService,
+    PrismaService,
+  ],
 
-  providers: [{
-    provide: CooperatorRepository,
-    useClass: PrismaCooperatorRepository
-  }, CooperatorService, PrismaService],
-
-  controllers: [CooperatorController]
+  controllers: [CooperatorController],
 })
-export class CooperatorModule {
-}
+export class CooperatorModule {}

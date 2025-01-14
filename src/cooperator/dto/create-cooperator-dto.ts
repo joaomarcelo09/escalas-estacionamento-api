@@ -1,11 +1,9 @@
-import { IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
 export class CreateCooperatorDto {
-  
   @IsString()
-  name: string
+  name: string;
 
   @IsString()
-  telephone: string
-
+  telephone: string;
 }

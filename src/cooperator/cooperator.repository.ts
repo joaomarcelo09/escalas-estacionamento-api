@@ -1,4 +1,4 @@
-import { CreateCooperatorDto } from "./dto/create-cooperator-dto";
+import { CreateCooperatorDto } from './dto/create-cooperator-dto';
 
 export abstract class CooperatorRepository {
   abstract create(data: CreateCooperatorDto);
