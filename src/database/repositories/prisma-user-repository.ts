@@ -1,7 +1,7 @@
-import { UserRepository } from 'src/user/user.repository';
+import { UserRepository } from 'src/modules/user/user.repository';
 import { PrismaService } from 'src/database/prisma-service';
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from 'src/auth/dto/create-user.dto';
+import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
 import { HashPassword } from 'src/helpers/security/bcrypt';
 import { v4 as uuid } from 'uuid';
 

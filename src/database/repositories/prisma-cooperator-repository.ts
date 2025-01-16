@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CooperatorRepository } from 'src/cooperator/cooperator.repository';
+import { CooperatorRepository } from 'src/modules/cooperator/cooperator.repository';
 import { PrismaService } from '../prisma-service';
-import { CreateCooperatorDto } from 'src/cooperator/dto/create-cooperator-dto';
+import { CreateCooperatorDto } from 'src/modules/cooperator/dto/create-cooperator-dto';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()

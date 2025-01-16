@@ -1,4 +1,4 @@
-import { CreateUserDto } from 'src/auth/dto/create-user.dto';
+import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
 
 type findParams = {
   where?: {
