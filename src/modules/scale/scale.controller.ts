@@ -20,9 +20,9 @@ export class ScaleController {
   ) {}
 
   @Post()
-  create(@Body() createScaleDto: CreateScaleDto) {
+  create(@Body() createScaleDto) {
     // return this.scaleService.create(createScaleDto);
-    return this.groupScaleService.create();
+    return this.groupScaleService.create(createScaleDto);
   }
 
   @Get()

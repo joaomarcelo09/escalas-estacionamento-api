@@ -7,7 +7,8 @@ import {
   getDaysInMonth,
 } from 'date-fns';
 
-export function getWednesdaysAndSundaysInMonth(date: Date) {
+export function getWednesdaysAndSundaysInMonth(selectDate: string) {
+  const date = new Date();
   const month = getMonth(date);
   const year = getYear(date);
 
