@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
-  filterCooperatorsToScale,
+  filterCooperatorsExceptions,
+  filterCooperatorsFrequency,
   getWednesdaysAndSundaysInMonth,
 } from './utils';
 
@@ -10,45 +11,38 @@ export class GroupScaleService {
     const days = getWednesdaysAndSundaysInMonth(body.selectedDate);
 
     const sectors = [1, 2, 3, 4, 5, 6];
-    const datesOfScale = days
-      .flatMap((x) => [
-        { date: x, period: 'morning' },
-        { date: x, period: 'night' },
-      ])
-      .flatMap(({ date, period }) =>
-        sectors.map((sector) => ({ date, period, sector })),
-      );
+    const datesOfScale = days.flatMap((x) => [
+      { date: x, period: 'morning', sectors },
+      { date: x, period: 'night', sectors },
+    ]);
 
-    const memoryScale = {
-      lastCreatedScale: null,
-      penultCreatedScale: null,
-    };
+    const memoryScale = [];
 
-    const data = datesOfScale.map((x) => {
-      const filteredCooperators = filterCooperatorsToScale(
-        body.cooperators,
-        x,
-        memoryScale,
-      ).map((c) => c.id_coop);
+    const data = datesOfScale.map((scale) => {
+      const sectors = scale.sectors.map((sec) => {
+        const filterCooperatorsByException = filterCooperatorsExceptions(
+          body.cooperators,
+          scale,
+          sec,
+        );
+
+        const filteredCooperators = filterCooperatorsFrequency(
+          filterCooperatorsByException,
+          scale,
+          memoryScale,
+        ).map((c) => c.id_coop);
+
+        return { id_sector: sec, cooperators: filteredCooperators };
+      });
 
       const bodyScale = {
         id_group_scale: 1,
-        period: x.period,
-        date: x.date,
-        id_sector: x.sector,
-        cooperators: filteredCooperators,
+        period: scale.period,
+        date: scale.date,
+        sectors,
       };
 
-      // Salva as duas ultimas escalas criadas
-
-      const isNewDate = x.sector === 1;
-
-      memoryScale.penultCreatedScale = isNewDate
-        ? memoryScale.lastCreatedScale
-        : memoryScale.penultCreatedScale;
-      memoryScale.lastCreatedScale = isNewDate
-        ? bodyScale
-        : memoryScale.lastCreatedScale;
+      memoryScale.push(bodyScale);
 
       return bodyScale;
     });
