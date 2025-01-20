@@ -1,7 +1,14 @@
-export function filterCooperatorsExceptions(cooperators, scale, sector) {
+export function filterCooperators(
+  cooperators,
+  scale,
+  sector,
+  memoryScale,
+  memorySector,
+) {
   const sectorCannotDiacun = [3, 4];
 
-  return cooperators.filter((cooperator) => {
+  // Filter all cooperator by exception if have
+  const filterCooperatorByException = cooperators.filter((cooperator) => {
     // Verify if has someone pinned exception on actual scale
     const hasPinnedException = cooperator.pinned_exceptions?.some(
       (exception) =>
@@ -26,10 +33,29 @@ export function filterCooperatorsExceptions(cooperators, scale, sector) {
       !hasDiacunSectorException
     );
   });
-}
 
-export function filterCooperatorsFrequency(cooperators, scale, memory) {
-  return cooperators.filter((cooperator) => {
-    return;
-  });
+  // After filter by exception, filter by frequency in memory scale
+  const filterCooperatorByFrequency = filterCooperatorByException.filter(
+    (cooperator) => {
+      const hasSameSectorException = memorySector.some(
+        (x) =>
+          x.id_sector !== sector && x.cooperators.includes(cooperator.id_coop),
+      );
+
+      const hasFrequencyException = [1, 2].some((offset) => {
+        const scale = memoryScale[memoryScale.length - offset];
+        return scale?.sectors.some((sec) =>
+          sec.cooperators.includes(cooperator.id_coop),
+        );
+      });
+
+      return (
+        cooperator.type === 'cooperator' &&
+        !hasSameSectorException &&
+        !hasFrequencyException
+      );
+    },
+  );
+
+  return filterCooperatorByFrequency.map((c) => c.id_coop);
 }

@@ -1,38 +1,65 @@
 import { Injectable } from '@nestjs/common';
-import {
-  filterCooperatorsExceptions,
-  filterCooperatorsFrequency,
-  getWednesdaysAndSundaysInMonth,
-} from './utils';
+import { filterCooperators, getWednesdaysAndSundaysInMonth } from './utils';
 
 @Injectable()
 export class GroupScaleService {
   create(body) {
     const days = getWednesdaysAndSundaysInMonth(body.selectedDate);
 
-    const sectors = [1, 2, 3, 4, 5, 6];
+    const sectors = [
+      {
+        id_sector: 1,
+        limit: 1,
+      },
+      {
+        id_sector: 2,
+        limit: 3,
+      },
+      {
+        id_sector: 3,
+        limit: 2,
+      },
+      {
+        id_sector: 4,
+        limit: 2,
+      },
+      {
+        id_sector: 5,
+        limit: 2,
+      },
+      {
+        id_sector: 6,
+        limit: 2,
+      },
+    ];
     const datesOfScale = days.flatMap((x) => [
       { date: x, period: 'morning', sectors },
       { date: x, period: 'night', sectors },
     ]);
 
     const memoryScale = [];
+    const memorySector = [];
 
     const data = datesOfScale.map((scale) => {
       const sectors = scale.sectors.map((sec) => {
-        const filterCooperatorsByException = filterCooperatorsExceptions(
+        const filteredCooperators = filterCooperators(
           body.cooperators,
           scale,
-          sec,
+          sec.id_sector,
+          memoryScale,
+          memorySector,
         );
 
-        const filteredCooperators = filterCooperatorsFrequency(
-          filterCooperatorsByException,
-          scale,
-          memoryScale,
-        ).map((c) => c.id_coop);
+        filteredCooperators.splice(sec.limit);
 
-        return { id_sector: sec, cooperators: filteredCooperators };
+        const bodySector = {
+          id_sector: sec.id_sector,
+          cooperators: filteredCooperators,
+        };
+
+        memorySector.push(bodySector);
+
+        return bodySector;
       });
 
       const bodyScale = {
