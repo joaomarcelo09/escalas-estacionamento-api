@@ -20,9 +20,8 @@ export class ScaleController {
   ) {}
 
   @Post()
-  create(@Body() createScaleDto) {
-    // return this.scaleService.create(createScaleDto);
-    return this.groupScaleService.create(createScaleDto);
+  async create(@Body() createScaleDto: CreateScaleDto) {
+    return await this.groupScaleService.create(createScaleDto);
   }
 
   @Get()

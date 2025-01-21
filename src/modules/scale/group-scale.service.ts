@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { filterCooperators, getWednesdaysAndSundaysInMonth } from './utils';
+import { CreateScaleDto } from './dto/create-scale.dto';
 
 @Injectable()
 export class GroupScaleService {
-  create(body) {
-    const days = getWednesdaysAndSundaysInMonth(body.selectedDate);
+  async create(body: CreateScaleDto) {
+    const days = getWednesdaysAndSundaysInMonth(body.selected_date);
 
     const sectors = [
       {
@@ -75,21 +76,5 @@ export class GroupScaleService {
     });
 
     return data;
-  }
-
-  findAll() {
-    return `This action returns all groupScale`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} groupScale`;
-  }
-
-  update(id: number, updateGroupScaleDto) {
-    return `This action updates a #${id} groupScale`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} groupScale`;
   }
 }
