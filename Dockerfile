@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Instala as dependências
-RUN npm ci
+RUN npm install
 
 # Copia o restante do código para o container
 COPY . .
