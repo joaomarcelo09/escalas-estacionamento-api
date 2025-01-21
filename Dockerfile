@@ -13,6 +13,8 @@ RUN npm install
 # Copia o restante do código para o container
 COPY . .
 
+# Sincroniza o esquema do Prisma com o banco de dados
+ENV DATABASE_URL=postgresql://tododb_owner:e16nGjiFSCvb@ep-wild-truth-a5ncxzy2.us-east-2.aws.neon.tech/escalasicnvdb?sslmode=require
 RUN npx prisma db push
 
 # Gera o Prisma Client
