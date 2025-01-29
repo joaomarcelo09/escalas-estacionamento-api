@@ -42,16 +42,17 @@ export class GroupScaleService {
     const memorySector = [];
 
     const data = datesOfScale.map((scale) => {
+      // entra no sector
       const sectors = scale.sectors.map((sec) => {
+        // filtrar cooperadores para que seja escalado no setor atual
         const filteredCooperators = filterCooperators(
           body.cooperators,
           scale,
           sec.id_sector,
           memoryScale,
           memorySector,
+          limit,
         );
-
-        filteredCooperators.splice(sec.limit);
 
         const bodySector = {
           id_sector: sec.id_sector,
