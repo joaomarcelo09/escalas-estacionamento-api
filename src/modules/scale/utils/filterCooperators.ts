@@ -1,64 +1,44 @@
-export function filterCooperators(
+import { CreateCooperatorsScaleDto } from '../dto/create-cooperators.scale.dto';
+import { ResponseScaleDto } from '../dto/response-scale.dto';
+import { ScaleDto } from '../dto/scale.dto';
+
+export function filterCooperators({
   cooperators,
   scale,
-  sector,
-  memoryScale,
+  sectorId,
   memorySector,
-  limit,
-) {
-  const sectorCannotDiacun = [3, 4];
-
+}: {
+  cooperators: CreateCooperatorsScaleDto[];
+  scale: ScaleDto;
+  sectorId: number;
+  memoryScale: ResponseScaleDto[];
+  memorySector: any;
+}) {
+  // tipar posteriormente
   // Filter all cooperator by exception if have
-  const filterCooperatorByException: any[] = cooperators.filter(
-    (cooperator) => {
-      // Verify if has someone pinned exception on actual scale
-      const hasPinnedException = cooperator.pinned_exceptions?.some(
-        (exception) =>
-          exception.sector === sector || exception.period === scale.period,
-      );
 
-      // Verify if has someone exception on actual scale
-      const hasException: boolean = cooperator.exceptions?.some(
-        (exception) =>
-          new Date(exception.date).getTime() === scale.date.getTime() &&
-          exception.period === scale.period,
-      );
+  const filteredCooperatorsByException = cooperators.filter((cooperator) => {
+    // Verify if cooperator its already scaled on another sector
+    const hasAlreadySelectedException = memorySector.some((sector) =>
+      sector.cooperators.includes(cooperator.id_coop),
+    );
+    if (hasAlreadySelectedException) return false;
 
-      // Verify if is diacun and the sector of scale is on sectors where cannot diacuns
-      const hasDiacunSectorException =
-        cooperator.type === 'diacun' && sectorCannotDiacun.includes(sector);
+    // Verify if has someone pinned exception on actual scale
+    const hasPinnedException = cooperator.pinned_exceptions?.some(
+      (exception) =>
+        exception.sector === sectorId || exception.period === scale.period,
+    );
+    if (hasPinnedException) return false;
 
-      return (
-        cooperator.type === 'cooperator' &&
-        !hasPinnedException &&
-        !hasException &&
-        !hasDiacunSectorException
-      );
-    },
-  );
+    // Verify if has someone exception on actual scale
+    const hasException: boolean = cooperator.exceptions?.some(
+      (exception) =>
+        new Date(exception.date) === scale.date && // testar depois
+        exception.period === scale.period,
+    );
+    return !hasException;
+  });
 
-  // After filter by exception, filter by frequency in memory scale
-  const filterCooperatorByFrequency = filterCooperatorByException.filter(
-    (cooperator) => {
-      const hasSameSectorException = memorySector.some(
-        (x) =>
-          x.id_sector !== sector && x.cooperators.includes(cooperator.id_coop),
-      );
-
-      const hasFrequencyException = [1, 2].some((offset) => {
-        const scale = memoryScale[memoryScale.length - offset];
-        return scale?.sectors.some((sec) =>
-          sec.cooperators.includes(cooperator.id_coop),
-        );
-      });
-
-      return (
-        cooperator.type === 'cooperator' &&
-        !hasSameSectorException &&
-        !hasFrequencyException
-      );
-    },
-  );
-
-  return filterCooperatorByFrequency.map((c) => c.id_coop).slice(limit);
+  return filteredCooperatorsByException;
 }
