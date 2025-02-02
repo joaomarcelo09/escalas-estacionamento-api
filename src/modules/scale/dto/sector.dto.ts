@@ -1,4 +1,4 @@
-import { IsNumber } from 'class-validator';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class SectorDto {
   @IsNumber()
@@ -9,4 +9,10 @@ export class SectorDto {
 
   @IsNumber()
   limit: number;
+
+  @IsEnum({
+    out: 'out',
+    in: 'in',
+  })
+  type: 'out' | 'in';
 }

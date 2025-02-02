@@ -52,6 +52,16 @@ export const chooseCooperators = ({
 
   // agora é pegar o type (dentro ou fora)
 
+  const sameScales = memoryScale.filter(
+    (scaleFind) =>
+      scaleFind.period === scale.period && dayOfWeek === getDay(scaleFind.date),
+  );
+
+  const lastSameScale = sameScales[sameScales.length - 1];
+  const sameSectorLastSameScale = lastSameScale.sectors.find(
+    (sec) => sec.id_sector === sector.id_sector,
+  );
+
   // evitar caso:wtipo de setor e com a mesma data + período da escala
   // ele já tenha sido escalado na última escala
 

@@ -4,40 +4,53 @@ import { CreateScaleDto } from './dto/create-scale.dto';
 import { chooseCooperators } from './utils/chooseCooperators';
 import { ResponseScaleDto } from './dto/response-scale.dto';
 import { ResponseSectorDto } from './dto/response-sector.dto';
+import { SectorDto } from './dto/sector.dto';
 
 @Injectable()
 export class GroupScaleService {
   async create(body: CreateScaleDto) {
-    const sectors = [
+    const sectors: SectorDto[] = [
       {
         id_sector: 1,
         minimal: 1,
         limit: 1,
+        type: 'out',
       },
       {
         id_sector: 2,
         minimal: 1,
         limit: 3,
+        type: 'in',
       },
       {
         id_sector: 3,
         minimal: 1,
         limit: 2,
+        type: 'in',
       },
       {
         id_sector: 4,
         minimal: 1,
         limit: 2,
+        type: 'in',
       },
       {
         id_sector: 5,
         minimal: 1,
         limit: 2,
+        type: 'in',
       },
       {
         id_sector: 6,
         minimal: 1,
         limit: 2,
+        type: 'in',
+      },
+      {
+        id_sector: 7,
+        minimal: 1,
+        limit: 2,
+        type: 'out',
       },
     ];
     const days = getWednesdaysAndSundaysInMonth(body.selected_date);
@@ -87,6 +100,7 @@ export class GroupScaleService {
 
         const bodySector = {
           id_sector: sec.id_sector,
+          type: sec.type,
           cooperators: limitedCooperators,
         };
 
