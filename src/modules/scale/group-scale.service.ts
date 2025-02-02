@@ -1,62 +1,107 @@
 import { Injectable } from '@nestjs/common';
 import { filterCooperators, getWednesdaysAndSundaysInMonth } from './utils';
 import { CreateScaleDto } from './dto/create-scale.dto';
+import { chooseCooperators } from './utils/chooseCooperators';
+import { ResponseScaleDto } from './dto/response-scale.dto';
+import { ResponseSectorDto } from './dto/response-sector.dto';
+import { SectorDto } from './dto/sector.dto';
 
 @Injectable()
 export class GroupScaleService {
   async create(body: CreateScaleDto) {
-    const days = getWednesdaysAndSundaysInMonth(body.selected_date);
-
-    const sectors = [
+    const sectors: SectorDto[] = [
       {
         id_sector: 1,
+        minimal: 1,
         limit: 1,
+        type: 'out',
       },
       {
         id_sector: 2,
+        minimal: 1,
         limit: 3,
+        type: 'in',
       },
       {
         id_sector: 3,
+        minimal: 1,
         limit: 2,
+        type: 'in',
       },
       {
         id_sector: 4,
+        minimal: 1,
         limit: 2,
+        type: 'in',
       },
       {
         id_sector: 5,
+        minimal: 1,
         limit: 2,
+        type: 'in',
       },
       {
         id_sector: 6,
+        minimal: 1,
         limit: 2,
+        type: 'in',
+      },
+      {
+        id_sector: 7,
+        minimal: 1,
+        limit: 2,
+        type: 'out',
       },
     ];
-    const datesOfScale = days.flatMap((x) => [
-      { date: x, period: 'morning', sectors },
-      { date: x, period: 'night', sectors },
-    ]);
+    const days = getWednesdaysAndSundaysInMonth(body.selected_date);
+    let minimalCooperators = 0;
 
-    const memoryScale = [];
-    const memorySector = [];
+    sectors.forEach((sector) => {
+      minimalCooperators = minimalCooperators + sector.minimal;
+    });
+
+    if (body.cooperators.length < minimalCooperators) return 'oi'; // precisa fazer um handler error
+
+    const datesOfScale = days.flatMap((day) =>
+      day.dayOfWeek === 'wednesday'
+        ? [{ date: day.iso, period: 'night', sectors }]
+        : [
+            { date: day.iso, period: 'morning', sectors },
+            { date: day.iso, period: 'night', sectors },
+          ],
+    ); // ver depois se dá pra refatorar isso aq
+
+    const memoryScale: ResponseScaleDto[] = [];
+    const memorySector: ResponseSectorDto[] = [];
 
     const data = datesOfScale.map((scale) => {
-      // entra no sector
       const sectors = scale.sectors.map((sec) => {
         // filtrar cooperadores para que seja escalado no setor atual
-        const filteredCooperators = filterCooperators(
-          body.cooperators,
+        const limit = 2;
+
+        const availableCooperators = filterCooperators({
+          cooperators: body.cooperators,
           scale,
-          sec.id_sector,
+          sectorId: sec.id_sector,
           memoryScale,
           memorySector,
-          limit,
-        );
+        });
+
+        const choosedCooperators = chooseCooperators({
+          alreadyChoosedCooperators: body.alreadySelectedCooperators,
+          cooperators: availableCooperators,
+          scale,
+          sector: sec,
+          memoryScale,
+          memorySector,
+        });
+
+        const limitedCooperators = choosedCooperators.slice(0, limit);
 
         const bodySector = {
           id_sector: sec.id_sector,
-          cooperators: filteredCooperators,
+          type: sec.type,
+          cooperators: limitedCooperators,
         };
 
         memorySector.push(bodySector);
