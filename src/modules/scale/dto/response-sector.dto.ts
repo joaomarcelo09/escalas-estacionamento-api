@@ -12,5 +12,5 @@ export class ResponseSectorDto {
   type: 'out' | 'in';
 
   @IsArray()
-  cooperators: CreateCooperatorsScaleDto[];
+  cooperators: CreateCooperatorsScaleDto['id_coop'][];
 }

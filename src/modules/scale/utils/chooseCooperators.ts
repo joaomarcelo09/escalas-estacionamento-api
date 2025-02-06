@@ -1,5 +1,4 @@
 import { getDay } from 'date-fns/getDay';
-import { AlreadySelectedCooperatorsDto } from '../dto/already-selected-cooperators.dto';
 import { CreateCooperatorsScaleDto } from '../dto/create-cooperators.scale.dto';
 import { ResponseScaleDto } from '../dto/response-scale.dto';
 import { ResponseSectorDto } from '../dto/response-sector.dto';
@@ -8,65 +7,93 @@ import { SectorDto } from '../dto/sector.dto';
 
 export const chooseCooperators = ({
   cooperators = [],
-  alreadyChoosedCooperators = [],
   scale,
   sector,
   memoryScale,
-  memorySector,
+  // memorySector,
 }: {
   cooperators: CreateCooperatorsScaleDto[];
-  alreadyChoosedCooperators: AlreadySelectedCooperatorsDto[];
   scale: ScaleDto;
   sector: SectorDto;
   memoryScale: ResponseScaleDto[];
   memorySector: ResponseSectorDto[];
 }): CreateCooperatorsScaleDto[] => {
+  const selectedCooperators: CreateCooperatorsScaleDto[] = [];
   const dayOfWeek = getDay(scale.date);
+  let availableCooperators: CreateCooperatorsScaleDto[] = [...cooperators]; // se nao fizer o spread, eles vao apontar pra mesma referência
+  const queue: {
+    priority: number;
+    cooperator: CreateCooperatorsScaleDto;
+  }[] = [];
 
-  // escalar pontualmente quem foi escolhido pra ser escalado nesse determinado setor e escala ()
-  const selectedCooperators = [];
+  // primeiramente, será verificado se já possui pessoas pré-escolhidas para a escala, caso tenha, ele já vai escalar
 
-  const choosedCooperatorsSameSector = alreadyChoosedCooperators.find(
-    (
-      choosed, // ver nome de variável dps
-    ) => choosed.sectors.some((sec) => sec.id_sector === sector.id_sector),
+  const choosedCooperatorsSameSector = cooperators.filter(
+    (coop) => coop.choosedScale.sectorId === sector.id_sector,
   );
 
   if (choosedCooperatorsSameSector) {
-    const alreadyChoosedCoopsId = choosedCooperatorsSameSector.sectors.find(
-      (sec) => sec.id_sector === sector.id_sector,
-    ).id_coops;
-
-    selectedCooperators.push(alreadyChoosedCoopsId);
+    const choosedCooperatorsIdSameSector = choosedCooperatorsSameSector.map(
+      (coop) => coop.id_coop,
+    );
+    selectedCooperators.push(...choosedCooperatorsSameSector);
+    availableCooperators = availableCooperators.filter(
+      (coop) => !choosedCooperatorsIdSameSector.includes(coop.id_coop),
+    );
   }
 
-  if (selectedCooperators.length === sector.limit) return selectedCooperators; // se ja tem a quantidade, retorna
+  if (selectedCooperators.length === sector.limit) return selectedCooperators; // se ja tem a quantidade esperada para o setor, retorna
 
-  const oldScalesSameDay = memoryScale.filter(
-    (scale) => scale.period && getDay(scale.date) === dayOfWeek,
+  // aqui, começará a filtragem por prioridade
+
+  const oldScalesSameDayAndPeriod = memoryScale.filter(
+    (scaleFilter) =>
+      scale.period === scaleFilter.period && getDay(scale.date) === dayOfWeek,
   );
 
-  const sectorOldScaleSameDay = oldScalesSameDay[
-    oldScalesSameDay.length - 1
-  ].sectors.find((sec) => sec.id_sector === sector.id_sector);
+  const lastScaleSameDayAndPeriod = oldScalesSameDayAndPeriod.at(-1);
 
-  // agora é pegar o type (dentro ou fora)
+  if (lastScaleSameDayAndPeriod) {
+    lastScaleSameDayAndPeriod.sectors.forEach((sec) => {
+      if (sec.type !== sector.type) {
+        const cooperatorsWithPriority = availableCooperators.filter((coop) =>
+          sec.cooperators.includes(coop.id_coop),
+        );
 
-  const sameScales = memoryScale.filter(
-    (scaleFind) =>
-      scaleFind.period === scale.period && dayOfWeek === getDay(scaleFind.date),
+        queue.push(
+          ...cooperatorsWithPriority.map((coop) => ({
+            priority: 10,
+            cooperator: coop,
+          })),
+        );
+        return;
+      }
+      if (sec.type === sector.type) {
+        const cooperatorsWithPriority = availableCooperators.filter((coop) =>
+          sec.cooperators.includes(coop.id_coop),
+        );
+
+        queue.push(
+          ...cooperatorsWithPriority.map((coop) => ({
+            priority: 0,
+            cooperator: coop,
+          })),
+        );
+      }
+    });
+  }
+
+  const orderedQueue = queue.sort((a, b) => (b.priority = a.priority));
+  const cooperatorsNeeded = sector.limit - chooseCooperators.length;
+  const pickedCooperatorsByPriority = orderedQueue.slice(
+    0,
+    cooperatorsNeeded - 1,
   );
 
-  const lastSameScale = sameScales[sameScales.length - 1];
-  const sameSectorLastSameScale = lastSameScale.sectors.find(
-    (sec) => sec.id_sector === sector.id_sector,
+  selectedCooperators.push(
+    ...pickedCooperatorsByPriority.map((coop) => coop.cooperator),
   );
-
-  // evitar caso:wtipo de setor e com a mesma data + período da escala
-  // ele já tenha sido escalado na última escala
 
   // em ultimo caso ou se atingir uma determinada prioridade
   // se faltar cooperador, pode escalar diácuno
-
-  return cooperators;
 };
