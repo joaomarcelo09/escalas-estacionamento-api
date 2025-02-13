@@ -5,6 +5,11 @@ import { ResponseSectorDto } from '../dto/response-sector.dto';
 import { ScaleDto } from '../dto/scale.dto';
 import { SectorDto } from '../dto/sector.dto';
 
+type QueueCooperator = {
+  priority: number;
+  cooperator: CreateCooperatorsScaleDto;
+};
+
 export const chooseCooperators = ({
   cooperators = [],
   scale,
@@ -20,29 +25,27 @@ export const chooseCooperators = ({
 }): CreateCooperatorsScaleDto[] => {
   const selectedCooperators: CreateCooperatorsScaleDto[] = [];
   const dayOfWeek = getDay(scale.date);
+  const queue: QueueCooperator[] = [];
   let availableCooperators: CreateCooperatorsScaleDto[] = [...cooperators]; // se nao fizer o spread, eles vao apontar pra mesma referência
-  const queue: {
-    priority: number;
-    cooperator: CreateCooperatorsScaleDto;
-  }[] = [];
 
   // primeiramente, será verificado se já possui pessoas pré-escolhidas para a escala, caso tenha, ele já vai escalar
 
-  const choosedCooperatorsSameSector = cooperators.filter(
-    (coop) => coop.choosedScale.sectorId === sector.id_sector,
+  const alreadyChoosedCooperatorsSameSector = cooperators.filter(
+    (coop) => coop.choosedScale?.sectorId === sector.id_sector,
   );
 
-  if (choosedCooperatorsSameSector) {
-    const choosedCooperatorsIdSameSector = choosedCooperatorsSameSector.map(
-      (coop) => coop.id_coop,
-    );
-    selectedCooperators.push(...choosedCooperatorsSameSector);
+  if (alreadyChoosedCooperatorsSameSector.length) {
+    const choosedCooperatorsIdSameSector =
+      alreadyChoosedCooperatorsSameSector.map((coop) => coop.id_coop);
+
+    selectedCooperators.push(...alreadyChoosedCooperatorsSameSector);
     availableCooperators = availableCooperators.filter(
       (coop) => !choosedCooperatorsIdSameSector.includes(coop.id_coop),
     );
   }
 
-  if (selectedCooperators.length === sector.limit) return selectedCooperators; // se ja tem a quantidade esperada para o setor, retorna
+  if (selectedCooperators.length === sector.quantity)
+    return selectedCooperators; // se ja tem a quantidade esperada para o setor, retorna
 
   // aqui, começará a filtragem por prioridade
 
@@ -81,18 +84,24 @@ export const chooseCooperators = ({
         );
       }
     });
+    const orderedQueue = queue.sort((a, b) => (b.priority = a.priority));
+    const cooperatorsNeeded = sector.quantity - chooseCooperators.length;
+    const pickedCooperatorsByPriority = orderedQueue.slice(
+      0,
+      cooperatorsNeeded - 1,
+    );
+
+    selectedCooperators.push(
+      ...pickedCooperatorsByPriority.map((coop) => coop.cooperator),
+    );
   }
 
-  const orderedQueue = queue.sort((a, b) => (b.priority = a.priority));
-  const cooperatorsNeeded = sector.limit - chooseCooperators.length;
-  const pickedCooperatorsByPriority = orderedQueue.slice(
-    0,
-    cooperatorsNeeded - 1,
-  );
+  if (selectedCooperators.length === sector.quantity)
+    return selectedCooperators;
 
-  selectedCooperators.push(
-    ...pickedCooperatorsByPriority.map((coop) => coop.cooperator),
-  );
+  return [...availableCooperators]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, sector.quantity);
 
   // em ultimo caso ou se atingir uma determinada prioridade
   // se faltar cooperador, pode escalar diácuno

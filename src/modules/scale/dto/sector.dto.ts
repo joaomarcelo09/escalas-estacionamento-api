@@ -1,14 +1,11 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber } from 'class-validator';
 
 export class SectorDto {
   @IsNumber()
   id_sector: number;
 
   @IsNumber()
-  minimal: number;
-
-  @IsNumber()
-  limit: number;
+  quantity: number;
 
   @IsEnum({
     out: 'out',

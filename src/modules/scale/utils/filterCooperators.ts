@@ -1,28 +1,32 @@
 import { CreateCooperatorsScaleDto } from '../dto/create-cooperators.scale.dto';
-import { ResponseScaleDto } from '../dto/response-scale.dto';
+import { ResponseSectorDto } from '../dto/response-sector.dto';
 import { ScaleDto } from '../dto/scale.dto';
 
 export function filterCooperators({
   cooperators,
   scale,
   sectorId,
+  scaleId,
   memorySector,
 }: {
   cooperators: CreateCooperatorsScaleDto[];
   scale: ScaleDto;
   sectorId: number;
-  memoryScale: ResponseScaleDto[];
-  memorySector: any;
+  scaleId: string;
+  memorySector: ResponseSectorDto[];
 }) {
-  // tipar posteriormente
-  // Filter all cooperator by exception if have
-
   const filteredCooperatorsByException = cooperators.filter((cooperator) => {
     // Verify if cooperator its already scaled on another sector
-    const hasAlreadySelectedException = memorySector.some((sector) =>
-      sector.cooperators.includes(cooperator.id_coop),
+
+    const sectorsOfThisScale = memorySector.filter(
+      (sec) => sec.id_scale === scaleId,
     );
-    if (hasAlreadySelectedException) return false;
+    if (sectorsOfThisScale.length) {
+      const hasAlreadySelectedException = sectorsOfThisScale.some((sector) =>
+        sector.cooperators.includes(cooperator.id_coop),
+      );
+      if (hasAlreadySelectedException) return false;
+    }
 
     // Verify if has someone pinned exception on actual scale
     const hasPinnedException = cooperator.pinned_exceptions?.some(
