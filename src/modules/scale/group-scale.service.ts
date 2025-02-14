@@ -16,32 +16,52 @@ const sectors: SectorDto[] = [
   {
     id_sector: 2,
     quantity: 1,
-    type: 'in',
+    type: 'out',
   },
   {
     id_sector: 3,
     quantity: 1,
-    type: 'in',
+    type: 'out',
   },
   {
     id_sector: 4,
     quantity: 1,
-    type: 'in',
+    type: 'out',
   },
   {
     id_sector: 5,
     quantity: 1,
-    type: 'in',
+    type: 'out',
   },
   {
     id_sector: 6,
     quantity: 1,
-    type: 'in',
+    type: 'out',
   },
   {
     id_sector: 7,
     quantity: 1,
-    type: 'out',
+    type: 'in',
+  },
+  {
+    id_sector: 8,
+    quantity: 1,
+    type: 'in',
+  },
+  {
+    id_sector: 9,
+    quantity: 1,
+    type: 'in',
+  },
+  {
+    id_sector: 10,
+    quantity: 1,
+    type: 'in',
+  },
+  {
+    id_sector: 11,
+    quantity: 1,
+    type: 'in',
   },
 ];
 
@@ -89,6 +109,7 @@ export class GroupScaleService {
           sector: sec,
           memoryScale,
           memorySector,
+          index,
         }); // talvez a gente so precise dos ids, ou seja, caso seja possivel, retornar apenas os ids
 
         const limitedCooperators = choosedCooperators.slice(0, sec.quantity);
