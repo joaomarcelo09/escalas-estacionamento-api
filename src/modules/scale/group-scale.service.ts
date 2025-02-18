@@ -7,67 +7,12 @@ import { ResponseSectorDto } from './dto/response-sector.dto';
 import { SectorDto } from './dto/sector.dto';
 import { v4 as uuid } from 'uuid';
 
-const sectors: SectorDto[] = [
-  {
-    id_sector: 1,
-    quantity: 1,
-    type: 'out',
-  },
-  {
-    id_sector: 2,
-    quantity: 1,
-    type: 'out',
-  },
-  {
-    id_sector: 3,
-    quantity: 1,
-    type: 'out',
-  },
-  {
-    id_sector: 4,
-    quantity: 1,
-    type: 'out',
-  },
-  {
-    id_sector: 5,
-    quantity: 1,
-    type: 'out',
-  },
-  {
-    id_sector: 6,
-    quantity: 1,
-    type: 'out',
-  },
-  {
-    id_sector: 7,
-    quantity: 1,
-    type: 'in',
-  },
-  {
-    id_sector: 8,
-    quantity: 1,
-    type: 'in',
-  },
-  {
-    id_sector: 9,
-    quantity: 1,
-    type: 'in',
-  },
-  {
-    id_sector: 10,
-    quantity: 1,
-    type: 'in',
-  },
-  {
-    id_sector: 11,
-    quantity: 1,
-    type: 'in',
-  },
-];
-
 @Injectable()
 export class GroupScaleService {
-  async create(body: CreateScaleDto) {
+  async create(
+    body: CreateScaleDto,
+    sectors: SectorDto[],
+  ): Promise<ResponseScaleDto[]> {
     let minimalCooperators = 0;
     const memoryScale: ResponseScaleDto[] = [];
     const memorySector: ResponseSectorDto[] = [];
@@ -99,7 +44,7 @@ export class GroupScaleService {
           cooperators: body.cooperators,
           scale,
           scaleId: id,
-          sectorId: sec.id_sector,
+          sectorId: sec.id,
           memorySector,
         });
 
@@ -116,7 +61,7 @@ export class GroupScaleService {
 
         const bodySector = {
           id_scale: id,
-          id_sector: sec.id_sector,
+          id_sector: sec.id,
           type: sec.type,
           cooperators: limitedCooperators.map((coop) => coop.id_coop),
         };

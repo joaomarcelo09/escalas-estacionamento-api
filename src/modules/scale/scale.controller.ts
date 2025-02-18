@@ -11,17 +11,25 @@ import { ScaleService } from './scale.service';
 import { CreateScaleDto } from './dto/create-scale.dto';
 import { UpdateScaleDto } from './dto/update-scale.dto';
 import { GroupScaleService } from './group-scale.service';
+import { SectorService } from '../sector/sector.service';
 
 @Controller('scale')
 export class ScaleController {
   constructor(
     private readonly scaleService: ScaleService,
     private readonly groupScaleService: GroupScaleService,
+    private readonly sectorService: SectorService,
   ) {}
 
   @Post()
   async create(@Body() createScaleDto: CreateScaleDto) {
-    return await this.groupScaleService.create(createScaleDto);
+    const sectors = await this.sectorService.findAll();
+    const dataFormatted = await this.groupScaleService.create(
+      createScaleDto,
+      sectors,
+    );
+
+    return dataFormatted;
   }
 
   @Get()

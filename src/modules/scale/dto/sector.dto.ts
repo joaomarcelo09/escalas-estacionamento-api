@@ -2,7 +2,7 @@ import { IsEnum, IsNumber } from 'class-validator';
 
 export class SectorDto {
   @IsNumber()
-  id_sector: number;
+  id: number;
 
   @IsNumber()
   quantity: number;

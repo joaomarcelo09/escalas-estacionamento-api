@@ -20,6 +20,25 @@ model User {
   password String
 }
 
+model Sector {
+  id        String     @id
+  name      String
+  id_seeder String
+  quantity  Int
+  type      TypeSector @default(IN)
+}
+
+model GroupScale {
+  id   String @id
+  name String
+}
+
+model Scale {
+  id       String      @id
+  id_scale String
+  period   ScalePeriod @default(NIGHT)
+}
+
 model Cooperators {
   id        String          @id
   name      String
@@ -30,4 +49,14 @@ model Cooperators {
 enum CooperatorsType {
   DEACUN
   COOPERATOR
+}
+
+enum TypeSector {
+  IN
+  OUT
+}
+
+enum ScalePeriod {
+  NIGHT
+  MORNING
 }

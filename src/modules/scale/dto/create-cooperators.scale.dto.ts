@@ -13,7 +13,7 @@ export class CreateCooperatorsScaleDto {
   choosedScale: {
     date: Date;
     period: 'morning' | 'night';
-    sectorId: SectorDto['id_sector'];
+    sectorId: SectorDto['id'];
   };
 
   exceptions: any;
