@@ -4,7 +4,7 @@ import { UpdateScaleDto } from './dto/update-scale.dto';
 
 @Injectable()
 export class ScaleService {
-  create(createScaleDto: CreateScaleDto) {
+  async create(data) {
     return 'This action adds a new scale';
   }
 

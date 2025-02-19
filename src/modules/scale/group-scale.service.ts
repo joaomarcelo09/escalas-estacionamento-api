@@ -6,10 +6,12 @@ import { ResponseScaleDto } from './dto/response-scale.dto';
 import { ResponseSectorDto } from './dto/response-sector.dto';
 import { SectorDto } from './dto/sector.dto';
 import { v4 as uuid } from 'uuid';
+import { ScaleRepository } from './scale.repository';
 
 @Injectable()
 export class GroupScaleService {
-  async create(
+  constructor(private repository: ScaleRepository) {}
+  async generateScale(
     body: CreateScaleDto,
     sectors: SectorDto[],
   ): Promise<ResponseScaleDto[]> {
@@ -83,6 +85,13 @@ export class GroupScaleService {
 
       return bodyScale;
     });
+
+    const createGroupScale = {
+      id: uuid(),
+      name: 'teste 1',
+    };
+
+    await this.repository.createGroupScale(createGroupScale);
 
     return data;
   }

@@ -35,8 +35,20 @@ model GroupScale {
 
 model Scale {
   id       String      @id
-  id_scale String
+  id_group_scale String
   period   ScalePeriod @default(NIGHT)
+}
+
+model ScaleSector {
+  id String @id
+  id_scale String
+  id_sector String
+}
+
+model SectorCooperator {
+  id String @id
+  id_sector String 
+  id_cooperator String
 }
 
 model Cooperators {

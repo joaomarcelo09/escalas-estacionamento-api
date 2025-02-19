@@ -24,10 +24,12 @@ export class ScaleController {
   @Post()
   async create(@Body() createScaleDto: CreateScaleDto) {
     const sectors = await this.sectorService.findAll();
-    const dataFormatted = await this.groupScaleService.create(
+    const dataFormatted = await this.groupScaleService.generateScale(
       createScaleDto,
       sectors,
     );
+
+    const createdScale = await this.scaleService.create(dataFormatted);
 
     return dataFormatted;
   }
