@@ -1,17 +1,11 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { ScaleService } from './scale.service';
 import { CreateScaleDto } from './dto/create-scale.dto';
-import { UpdateScaleDto } from './dto/update-scale.dto';
 import { GroupScaleService } from './group-scale.service';
 import { SectorService } from '../sector/sector.service';
+import { PrismaClient } from '@prisma/client';
+
+const $prisma = new PrismaClient();
 
 @Controller('scale')
 export class ScaleController {
@@ -29,7 +23,30 @@ export class ScaleController {
       sectors,
     );
 
-    const createdScale = await this.scaleService.create(dataFormatted);
+    await $prisma.$transaction(async (tx) => {
+      await Promise.all(
+        dataFormatted.map(async (scale) => {
+          await this.scaleService.create(scale, tx);
+
+          await Promise.all(
+            scale.sectors.map(async (sector) => {
+              const scaleSectorId = await this.scaleService.createScaleSector(
+                sector,
+                scale.id,
+                tx,
+              );
+
+              // Garante que essa operação seja concluída antes da transação ser fechada
+              await this.scaleService.createCoopSectorScale(
+                sector.cooperators,
+                scaleSectorId,
+                tx,
+              );
+            }),
+          );
+        }),
+      );
+    });
 
     return dataFormatted;
   }
@@ -44,10 +61,10 @@ export class ScaleController {
     return this.scaleService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateScaleDto: UpdateScaleDto) {
-    return this.scaleService.update(+id, updateScaleDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateScaleDto: UpdateScaleDto) {
+  //   return this.scaleService.update(+id, updateScaleDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

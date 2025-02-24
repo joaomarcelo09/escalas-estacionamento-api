@@ -17,6 +17,14 @@ export class GroupScaleService {
     const memorySector: ResponseSectorDto[] = [];
     const days = getWednesdaysAndSundaysInMonth(body.selected_date);
 
+    const createGroupScale = {
+      id: uuid(),
+      name: 'teste 1',
+    };
+
+    const createdGroupScale =
+      await this.repository.createGroupScale(createGroupScale);
+
     sectors.forEach((sector) => {
       minimalCooperators = minimalCooperators + sector.quantity;
     });
@@ -72,7 +80,7 @@ export class GroupScaleService {
 
       const bodyScale = {
         id,
-        id_group_scale: 1,
+        id_group_scale: createdGroupScale.id,
         period: scale.period,
         date: scale.date,
         sectors,
@@ -83,19 +91,6 @@ export class GroupScaleService {
       return bodyScale;
     });
 
-    const createGroupScale = {
-      id: uuid(),
-      name: 'teste 1',
-    };
-
-    const createdGroupScale =
-      await this.repository.createGroupScale(createGroupScale);
-
-    const responseService = {
-      data,
-      idGroupScale: createdGroupScale.id,
-    };
-
-    return responseService;
+    return data;
   }
 }
