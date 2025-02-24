@@ -11,10 +11,7 @@ import { ScaleRepository } from './scale.repository';
 @Injectable()
 export class GroupScaleService {
   constructor(private repository: ScaleRepository) {}
-  async generateScale(
-    body: CreateScaleDto,
-    sectors: SectorDto[],
-  ): Promise<ResponseScaleDto[]> {
+  async generateScale(body: CreateScaleDto, sectors: SectorDto[]) {
     let minimalCooperators = 0;
     const memoryScale: ResponseScaleDto[] = [];
     const memorySector: ResponseSectorDto[] = [];
@@ -91,8 +88,14 @@ export class GroupScaleService {
       name: 'teste 1',
     };
 
-    await this.repository.createGroupScale(createGroupScale);
+    const createdGroupScale =
+      await this.repository.createGroupScale(createGroupScale);
 
-    return data;
+    const responseService = {
+      data,
+      idGroupScale: createdGroupScale.id,
+    };
+
+    return responseService;
   }
 }

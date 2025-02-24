@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateScaleDto } from './dto/create-scale.dto';
 import { UpdateScaleDto } from './dto/update-scale.dto';
 
 @Injectable()
 export class ScaleService {
   async create(data) {
+    const idGroupScale = data.idGroupScale;
+
     return 'This action adds a new scale';
   }
 
