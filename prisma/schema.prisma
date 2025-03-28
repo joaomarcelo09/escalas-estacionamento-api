@@ -20,14 +20,75 @@ model User {
   password String
 }
 
+model Sector {
+  id        String     @id @default(uuid())
+  name      String
+  id_seeder String
+  quantity  Int
+  type      TypeSector @default(IN)
+
+  scaleSectors ScaleSector[]
+}
+
+model GroupScale {
+  id   String @id @default(uuid())
+  name String
+
+  scales Scale[]
+}
+
+model Scale {
+  id             String      @id @default(uuid())
+  id_group_scale String
+  period         ScalePeriod @default(NIGHT)
+
+  groupScale GroupScale @relation(fields: [id_group_scale], references: [id])
+
+  scaleSectors ScaleSector[]
+}
+
+model ScaleSector {
+  id        String @id @default(uuid())
+  id_scale  String
+  id_sector String
+
+  scale Scale @relation(fields: [id_scale], references: [id])
+
+  sector Sector @relation(fields: [id_sector], references: [id])
+
+  sectorCooperators SectorCooperator[]
+}
+
+model SectorCooperator {
+  id              String @id @default(uuid())
+  id_scale_sector String
+  id_cooperator   String
+
+  scaleSector ScaleSector @relation(fields: [id_scale_sector], references: [id])
+
+  cooperator Cooperators @relation(fields: [id_cooperator], references: [id])
+}
+
 model Cooperators {
-  id        String          @id
+  id        String          @id @default(uuid())
   name      String
   telephone String
   type      CooperatorsType @default(COOPERATOR)
+
+  sectorCooperators SectorCooperator[]
 }
 
 enum CooperatorsType {
   DEACUN
   COOPERATOR
+}
+
+enum TypeSector {
+  IN
+  OUT
+}
+
+enum ScalePeriod {
+  NIGHT
+  MORNING
 }
