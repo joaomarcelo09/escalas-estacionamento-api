@@ -22,7 +22,7 @@ export const chooseCooperators = ({
 
   // Manter a lógica existente para cooperadores pré-escolhidos
   const alreadyChoosedCooperatorsSameSector = cooperators.filter(
-    (coop) => coop.choosedScale?.sectorId === sector.id,
+    (coop) => coop.assignment?.sectorId === sector.id,
   );
 
   if (alreadyChoosedCooperatorsSameSector.length) {

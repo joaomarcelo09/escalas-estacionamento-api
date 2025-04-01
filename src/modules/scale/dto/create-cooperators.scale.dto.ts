@@ -10,7 +10,7 @@ export class CreateCooperatorsScaleDto {
 
   pinned_exceptions: any;
 
-  choosedScale: {
+  assignment: {
     date: Date;
     period: 'morning' | 'night';
     sectorId: SectorDto['id'];
