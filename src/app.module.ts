@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './modules/auth/auth.module';
+// import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { PrismaService } from 'src/database/prisma-service';
 import { CooperatorModule } from './modules/cooperator/cooperator.module';
@@ -11,7 +11,7 @@ import { PrismaSectorRepository } from './database/repositories/prisma-sector-re
 import { SectorRepository } from './modules/sector/sector.repository';
 
 @Module({
-  imports: [AuthModule, UserModule, CooperatorModule, ScaleModule],
+  imports: [UserModule, CooperatorModule, ScaleModule],
   controllers: [AppController],
   providers: [
     AppService,
