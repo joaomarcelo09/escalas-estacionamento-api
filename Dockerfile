@@ -13,7 +13,9 @@ RUN npm install
 # Copia o restante do código para o container
 COPY . .
 
-# Sincroniza o esquema do Prisma com o banco de dados
+# Load environment variables
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 RUN npx prisma db push
 
 # Gera o Prisma Client
