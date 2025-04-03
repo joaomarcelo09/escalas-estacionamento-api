@@ -9,7 +9,27 @@ services:
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: escalasicnvdb
       PGDATA: /data/postgres
-    volumes: 
-      - ./data/pg:/data/postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: escalasicnv-app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://admin:123456@postgres:5432/escalasicnvdb?schema=public
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
 
 
+networks:
+  app-network:
+    driver: bridge
