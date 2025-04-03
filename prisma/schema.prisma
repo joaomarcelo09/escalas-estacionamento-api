@@ -78,6 +78,11 @@ model Cooperators {
   sectorCooperators SectorCooperator[]
 }
 
+model PinnedException {
+  id     String      @id @default(uuid())
+  period ScalePeriod @default(NIGHT)
+}
+
 enum CooperatorsType {
   DEACUN
   COOPERATOR
