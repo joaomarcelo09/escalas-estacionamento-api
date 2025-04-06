@@ -23,7 +23,7 @@ export function filterCooperators({
     );
     if (sectorsOfThisScale.length) {
       const hasAlreadySelectedException = sectorsOfThisScale.some((sector) =>
-        sector.cooperators.includes(cooperator.id_coop),
+        sector.cooperators.some((coop) => coop.id_coop == cooperator.id_coop),
       );
       if (hasAlreadySelectedException) return false;
     }
