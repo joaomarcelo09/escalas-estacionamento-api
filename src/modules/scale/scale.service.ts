@@ -7,7 +7,7 @@ import { ScalePeriod } from '@prisma/client';
 export class ScaleService {
   constructor(private repository: ScaleRepository) {}
 
-  async create(data, tx) {
+  async create(data, tx?) {
     const periodValue = data.period.toUpperCase();
 
     if (!Object.values(ScalePeriod).includes(periodValue as ScalePeriod)) {
@@ -26,7 +26,7 @@ export class ScaleService {
     return;
   }
 
-  async createScaleSector(sector, idScale, tx) {
+  async createScaleSector(sector, idScale, tx?) {
     const scaleSector = await this.repository.createScaleSector(
       {
         id: randomUUID(),
@@ -39,7 +39,7 @@ export class ScaleService {
     return scaleSector.id;
   }
 
-  async createCoopSectorScale(sectorCooperators, idScaleSector, tx) {
+  async createCoopSectorScale(sectorCooperators, idScaleSector, tx?) {
     await Promise.all(
       sectorCooperators.map(async (cooperator) => {
         await this.repository.createCoopSectorScale(

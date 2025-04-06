@@ -3,9 +3,10 @@ import { ScaleService } from './scale.service';
 import { CreateScaleDto } from './dto/create-scale.dto';
 import { GroupScaleService } from './group-scale.service';
 import { SectorService } from '../sector/sector.service';
-import { PrismaClient } from '@prisma/client';
+// import { PrismaClient } from '@prisma/client';
+// import { timeout } from 'rxjs';
 
-const $prisma = new PrismaClient();
+// const $prisma = new PrismaClient();
 
 @Controller('scale')
 export class ScaleController {
@@ -23,30 +24,31 @@ export class ScaleController {
       sectors,
     );
 
-    await $prisma.$transaction(async (tx) => {
-      await Promise.all(
-        dataFormatted.map(async (scale) => {
-          await this.scaleService.create(scale, tx);
+    await Promise.all(
+      dataFormatted.map(async (scale) => {
+        await this.scaleService.create(scale);
 
-          await Promise.all(
-            scale.sectors.map(async (sector) => {
-              const scaleSectorId = await this.scaleService.createScaleSector(
-                sector,
-                scale.id,
-                tx,
-              );
+        await Promise.all(
+          scale.sectors.map(async (sector) => {
+            const scaleSectorId = await this.scaleService.createScaleSector(
+              sector,
+              scale.id,
+            );
 
-              // Garante que essa operação seja concluída antes da transação ser fechada
-              await this.scaleService.createCoopSectorScale(
-                sector.cooperators,
-                scaleSectorId,
-                tx,
-              );
-            }),
-          );
-        }),
-      );
-    });
+            // Garante que essa operação seja concluída antes da transação ser fechada
+            await this.scaleService.createCoopSectorScale(
+              sector.cooperators,
+              scaleSectorId,
+            );
+          }),
+        );
+      }),
+    );
+    // await $prisma.$transaction(
+    //   async (tx) => {
+    //   },
+    //   { timeout: 100000 },
+    // );
 
     return dataFormatted;
   }
