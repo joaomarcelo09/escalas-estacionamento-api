@@ -35,6 +35,10 @@ export function filterCooperators({
     );
     if (hasPinnedException) return false;
 
+    const hasAssignments = cooperator.assignments.length > 0;
+
+    if (hasAssignments) return false;
+
     // Verify if has someone exception on actual scale
     const hasException: boolean = cooperator.exceptions?.some(
       (exception) =>

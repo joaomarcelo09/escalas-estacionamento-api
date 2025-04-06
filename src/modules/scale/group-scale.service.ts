@@ -74,7 +74,7 @@ export class GroupScaleService {
           }); // talvez a gente so precise dos ids, ou seja, caso seja possivel, retornar apenas os ids
         }
 
-        choosedCooperators = selectedCooperators;
+        choosedCooperators = [...selectedCooperators, ...choosedCooperators];
 
         const limitedCooperators = choosedCooperators.slice(0, sec.quantity);
 
