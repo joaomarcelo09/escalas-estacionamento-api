@@ -38,7 +38,7 @@ export function filterCooperators({
     // Verify if has someone exception on actual scale
     const hasException: boolean = cooperator.exceptions?.some(
       (exception) =>
-        new Date(exception.date) === scale.date && // testar depois
+        new Date(exception.date).getTime() === scale.date.getTime() && // testar depois
         exception.period === scale.period,
     );
     return !hasException;

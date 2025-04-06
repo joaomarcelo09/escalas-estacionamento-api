@@ -10,11 +10,11 @@ export class CreateCooperatorsScaleDto {
 
   pinned_exceptions: any;
 
-  assignment: {
+  assignments: {
     date: Date;
     period: 'morning' | 'night';
-    sectorId: SectorDto['id'];
-  };
+    sector: SectorDto['id'];
+  }[];
 
   exceptions: any;
   coop_name: any;
