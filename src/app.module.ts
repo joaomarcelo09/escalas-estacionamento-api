@@ -12,9 +12,10 @@ import { SectorRepository } from './modules/sector/sector.repository';
 import { CooperatorService } from './modules/cooperator/cooperator.service';
 import { CooperatorRepository } from './modules/cooperator/cooperator.repository';
 import { PrismaCooperatorRepository } from './database/repositories/prisma-cooperator-repository';
+import { SectorModule } from './modules/sector/sector.module';
 
 @Module({
-  imports: [UserModule, CooperatorModule, ScaleModule],
+  imports: [UserModule, CooperatorModule, ScaleModule, SectorModule],
   controllers: [AppController],
   providers: [
     AppService,
