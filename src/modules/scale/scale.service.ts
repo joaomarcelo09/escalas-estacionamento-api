@@ -45,7 +45,7 @@ export class ScaleService {
         await this.repository.createCoopSectorScale(
           {
             id: randomUUID(),
-            id_cooperator: cooperator,
+            id_cooperator: cooperator.id_coop,
             id_scale_sector: idScaleSector,
           },
           tx,

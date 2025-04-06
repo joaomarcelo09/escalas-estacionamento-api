@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 
 export class CreateCooperatorDto {
   @IsString()
@@ -6,4 +6,10 @@ export class CreateCooperatorDto {
 
   @IsString()
   telephone: string;
+
+  @IsEnum({
+    COOPERATOR: 'COOPERATOR',
+    DEACUN: 'DEACUN',
+  })
+  type: 'COOPERATOR' | 'DEACUN';
 }

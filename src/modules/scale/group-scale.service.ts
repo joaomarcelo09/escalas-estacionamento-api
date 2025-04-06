@@ -70,7 +70,11 @@ export class GroupScaleService {
           id_scale: id,
           id_sector: sec.id,
           type: sec.type,
-          cooperators: limitedCooperators.map((coop) => coop.id_coop),
+          name: sec.name,
+          cooperators: limitedCooperators.map((coop) => ({
+            id_coop: coop.id_coop,
+            name: coop.coop_name,
+          })),
         };
 
         memorySector.push(bodySector);

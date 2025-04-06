@@ -17,4 +17,5 @@ export class CreateCooperatorsScaleDto {
   };
 
   exceptions: any;
+  coop_name: any;
 }

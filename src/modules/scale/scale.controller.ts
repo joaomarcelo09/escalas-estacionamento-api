@@ -5,6 +5,7 @@ import { GroupScaleService } from './group-scale.service';
 import { SectorService } from '../sector/sector.service';
 // import { PrismaClient } from '@prisma/client';
 // import { timeout } from 'rxjs';
+import { CooperatorService } from '../cooperator/cooperator.service';
 
 // const $prisma = new PrismaClient();
 
@@ -14,11 +15,33 @@ export class ScaleController {
     private readonly scaleService: ScaleService,
     private readonly groupScaleService: GroupScaleService,
     private readonly sectorService: SectorService,
+    private readonly cooperatorsService: CooperatorService,
   ) {}
 
   @Post()
   async create(@Body() createScaleDto: CreateScaleDto) {
     const sectors = await this.sectorService.findAll();
+
+    const idCooperatorsBody = createScaleDto.cooperators.map(
+      (coop) => coop.id_coop,
+    );
+    const whereCooperators = {
+      id: {
+        in: idCooperatorsBody,
+      },
+    };
+
+    const cooperators = await this.cooperatorsService.findAll({
+      where: whereCooperators,
+    });
+
+    createScaleDto.cooperators = createScaleDto.cooperators.map(
+      (coopBody, i) => ({
+        ...coopBody,
+        coop_name: cooperators[i].name,
+      }),
+    );
+
     const dataFormatted = await this.groupScaleService.generateScale(
       createScaleDto,
       sectors,

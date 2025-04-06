@@ -25,7 +25,7 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
     });
   }
 
-  async findAll() {
-    return await this.prisma.cooperators.findMany();
+  async findAll({ where }) {
+    return await this.prisma.cooperators.findMany({ where });
   }
 }
