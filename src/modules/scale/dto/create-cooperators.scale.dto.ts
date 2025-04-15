@@ -1,20 +1,21 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { SectorDto } from './sector.dto';
 
 export class CreateCooperatorsScaleDto {
-  @IsNumber()
-  id_coop: number;
+  @IsString({ message: 'id must be a string' })
+  id_coop: string;
 
   @IsString()
   type: 'cooperator' | 'diacun';
 
   pinned_exceptions: any;
 
-  assignment: {
+  assignments: {
     date: Date;
     period: 'morning' | 'night';
-    sectorId: SectorDto['id'];
-  };
+    sector: SectorDto['id'];
+  }[];
 
   exceptions: any;
+  coop_name: any;
 }

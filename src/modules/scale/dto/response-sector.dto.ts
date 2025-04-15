@@ -1,5 +1,4 @@
 import { IsArray, IsEnum, IsNumber, IsUUID } from 'class-validator';
-import { CreateCooperatorsScaleDto } from './create-cooperators.scale.dto';
 
 export class ResponseSectorDto {
   @IsUUID()
@@ -15,5 +14,5 @@ export class ResponseSectorDto {
   type: 'out' | 'in';
 
   @IsArray()
-  cooperators: CreateCooperatorsScaleDto['id_coop'][];
+  cooperators: any;
 }

@@ -23,7 +23,7 @@ export function filterCooperators({
     );
     if (sectorsOfThisScale.length) {
       const hasAlreadySelectedException = sectorsOfThisScale.some((sector) =>
-        sector.cooperators.includes(cooperator.id_coop),
+        sector.cooperators.some((coop) => coop.id_coop == cooperator.id_coop),
       );
       if (hasAlreadySelectedException) return false;
     }
@@ -35,10 +35,14 @@ export function filterCooperators({
     );
     if (hasPinnedException) return false;
 
+    const hasAssignments = cooperator.assignments.length > 0;
+
+    if (hasAssignments) return false;
+
     // Verify if has someone exception on actual scale
     const hasException: boolean = cooperator.exceptions?.some(
       (exception) =>
-        new Date(exception.date) === scale.date && // testar depois
+        new Date(exception.date).getTime() === scale.date.getTime() && // testar depois
         exception.period === scale.period,
     );
     return !hasException;

@@ -30,6 +30,8 @@ export class CooperatorController {
   @HttpCode(HttpStatus.OK)
   @Get()
   async findAll() {
-    return this.service.findAll();
+    const where = {};
+
+    return this.service.findAll({ where });
   }
 }

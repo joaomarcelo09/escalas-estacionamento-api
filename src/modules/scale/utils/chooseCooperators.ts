@@ -1,8 +1,6 @@
-import { getDay } from 'date-fns/getDay';
 import { CreateCooperatorsScaleDto } from '../dto/create-cooperators.scale.dto';
 import { ResponseScaleDto } from '../dto/response-scale.dto';
 import { ResponseSectorDto } from '../dto/response-sector.dto';
-import { ScaleDto } from '../dto/scale.dto';
 import { SectorDto } from '../dto/sector.dto';
 
 export const chooseCooperators = ({
@@ -11,36 +9,17 @@ export const chooseCooperators = ({
   memoryScale,
 }: {
   cooperators: CreateCooperatorsScaleDto[];
-  scale: ScaleDto;
   sector: SectorDto;
   memoryScale: ResponseScaleDto[];
   memorySector: ResponseSectorDto[];
   index: number;
 }): CreateCooperatorsScaleDto[] => {
   const selectedCooperators: CreateCooperatorsScaleDto[] = [];
-  let availableCooperators: CreateCooperatorsScaleDto[] = [...cooperators];
-
-  // Manter a lógica existente para cooperadores pré-escolhidos
-  const alreadyChoosedCooperatorsSameSector = cooperators.filter(
-    (coop) => coop.assignment?.sectorId === sector.id,
-  );
-
-  if (alreadyChoosedCooperatorsSameSector.length) {
-    const choosedCooperatorsIdSameSector =
-      alreadyChoosedCooperatorsSameSector.map((coop) => coop.id_coop);
-
-    selectedCooperators.push(...alreadyChoosedCooperatorsSameSector);
-    availableCooperators = availableCooperators.filter(
-      (coop) => !choosedCooperatorsIdSameSector.includes(coop.id_coop),
-    );
-  }
-
-  if (selectedCooperators.length === sector.quantity)
-    return selectedCooperators;
+  const availableCooperators: CreateCooperatorsScaleDto[] = [...cooperators];
 
   // Nova lógica: Contar quantas vezes cada cooperador esteve no mesmo tipo de setor (in/out)
   // em todo o histórico de escalas
-  const cooperatorTypeCount = new Map<number, { in: number; out: number }>();
+  const cooperatorTypeCount = new Map<string, { in: number; out: number }>();
 
   // Inicializar contagem para todos os cooperadores disponíveis
   availableCooperators.forEach((coop) => {

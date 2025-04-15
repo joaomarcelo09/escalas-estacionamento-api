@@ -8,6 +8,9 @@ import { PrismaService } from 'src/database/prisma-service';
 import { SectorService } from '../sector/sector.service';
 import { ScaleRepository } from './scale.repository';
 import { PrismaScaleRepository } from 'src/database/repositories/prisma-scale-repository';
+import { CooperatorService } from '../cooperator/cooperator.service';
+import { PrismaCooperatorRepository } from 'src/database/repositories/prisma-cooperator-repository';
+import { CooperatorRepository } from '../cooperator/cooperator.repository';
 
 @Module({
   controllers: [ScaleController],
@@ -20,10 +23,15 @@ import { PrismaScaleRepository } from 'src/database/repositories/prisma-scale-re
       provide: ScaleRepository,
       useClass: PrismaScaleRepository,
     },
+    {
+      provide: CooperatorRepository,
+      useClass: PrismaCooperatorRepository,
+    },
     PrismaService,
     ScaleService,
     GroupScaleService,
     SectorService,
+    CooperatorService,
   ],
 })
 export class ScaleModule {}

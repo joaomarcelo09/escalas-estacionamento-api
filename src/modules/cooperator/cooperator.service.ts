@@ -14,7 +14,7 @@ export class CooperatorService {
     return this.repository.delete(id);
   }
 
-  async findAll() {
-    return this.repository.findAll();
+  async findAll({ where }) {
+    return this.repository.findAll({ where });
   }
 }
