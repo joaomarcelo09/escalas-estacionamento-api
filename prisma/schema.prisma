@@ -72,7 +72,7 @@ model SectorCooperator {
 model Cooperators {
   id        String          @id @default(uuid())
   name      String
-  telephone String
+  telephone String?
   type      CooperatorsType @default(COOPERATOR)
 
   sectorCooperators SectorCooperator[]
