@@ -1,10 +1,11 @@
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CreateCooperatorDto {
   @IsString()
   name: string;
 
   @IsString()
+  @IsOptional()
   telephone: string;
 
   @IsEnum({
