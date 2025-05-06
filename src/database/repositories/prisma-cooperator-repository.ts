@@ -18,6 +18,17 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
     });
   }
 
+  async createAssignment(body) {
+    return await this.prisma.assignments.create({
+      data: {
+        date: body.date,
+        reason: body.reason,
+        id_sector: body.sector,
+        id_cooperator: body.id_cooperator,
+      },
+    });
+  }
+
   async update(id: string, coop: UpdateCooperatorDto) {
     return await this.prisma.cooperators.update({
       where: {

@@ -17,7 +17,30 @@ export class CooperatorController {
 
   @Post()
   async create(@Body() data: CreateCooperatorDto) {
-    return this.service.create(data);
+    const assignments = data.assignments;
+    console.log(assignments, 'testando');
+
+    delete data.assignments;
+
+    let createdCooperator = await this.service.create(data);
+
+    const createdAssignments = await Promise.all(
+      assignments.map(async (x) => {
+        const assignData = {
+          ...x,
+          id_cooperator: createdCooperator.id,
+        };
+        return this.service.createAssignment(assignData);
+      }),
+    );
+    console.log(createdAssignments, 'createdAssignments');
+
+    createdCooperator = {
+      ...createdCooperator,
+      createdAssignments,
+    };
+
+    return createdCooperator;
   }
 
   @Patch(':id')

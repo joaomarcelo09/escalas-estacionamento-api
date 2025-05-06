@@ -28,6 +28,7 @@ model Sector {
   type      TypeSector @default(IN)
 
   scaleSectors ScaleSector[]
+  Assignments  Assignments[]
 }
 
 model GroupScale {
@@ -72,15 +73,23 @@ model SectorCooperator {
 model Cooperators {
   id        String          @id @default(uuid())
   name      String
-  telephone String
+  telephone String?
   type      CooperatorsType @default(COOPERATOR)
 
   sectorCooperators SectorCooperator[]
+  Assignments       Assignments[]
 }
 
-model PinnedException {
-  id     String      @id @default(uuid())
-  period ScalePeriod @default(NIGHT)
+model Assignments {
+  id            String      @id @default(uuid())
+  period        ScalePeriod @default(NIGHT)
+  date          String
+  reason        String
+  id_sector     String
+  id_cooperator String
+
+  sector     Sector      @relation(fields: [id_sector], references: [id])
+  cooperator Cooperators @relation(fields: [id_cooperator], references: [id])
 }
 
 enum CooperatorsType {
