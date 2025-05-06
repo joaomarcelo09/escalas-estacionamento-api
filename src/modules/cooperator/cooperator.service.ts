@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CooperatorRepository } from './cooperator.repository';
 import { CreateCooperatorDto } from './dto/create-cooperator-dto';
+import { UpdateCooperatorDto } from './dto/update-cooperator-dto';
 
 @Injectable()
 export class CooperatorService {
@@ -8,6 +9,10 @@ export class CooperatorService {
 
   async create(coop: CreateCooperatorDto) {
     return this.repository.create(coop);
+  }
+
+  async update(id: string, coop: UpdateCooperatorDto) {
+    return this.repository.update(id, coop);
   }
 
   async delete(id: string) {
