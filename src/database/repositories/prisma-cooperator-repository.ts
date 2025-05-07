@@ -18,8 +18,8 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
     });
   }
 
-  async createAssignment(body) {
-    return await this.prisma.assignments.create({
+  async createPinnedException(body) {
+    return await this.prisma.pinnedException.create({
       data: {
         date: body.date,
         reason: body.reason,

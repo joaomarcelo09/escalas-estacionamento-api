@@ -17,27 +17,25 @@ export class CooperatorController {
 
   @Post()
   async create(@Body() data: CreateCooperatorDto) {
-    const assignments = data.assignments;
-    console.log(assignments, 'testando');
+    const pinned_exceptions = data.pinned_exceptions;
 
-    delete data.assignments;
+    delete data.pinned_exceptions;
 
     let createdCooperator = await this.service.create(data);
 
-    const createdAssignments = await Promise.all(
-      assignments.map(async (x) => {
-        const assignData = {
+    const createdPinnedExcep = await Promise.all(
+      pinned_exceptions.map(async (x) => {
+        const pinnedExcepData = {
           ...x,
           id_cooperator: createdCooperator.id,
         };
-        return this.service.createAssignment(assignData);
+        return this.service.createPinnedException(pinnedExcepData);
       }),
     );
-    console.log(createdAssignments, 'createdAssignments');
 
     createdCooperator = {
       ...createdCooperator,
-      createdAssignments,
+      createdPinnedExcep,
     };
 
     return createdCooperator;

@@ -15,5 +15,5 @@ export class CreateCooperatorDto {
   type: 'COOPERATOR' | 'DEACUN';
 
   @IsArray()
-  assignments: any[];
+  pinned_exceptions: any[];
 }

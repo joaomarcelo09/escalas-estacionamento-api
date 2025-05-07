@@ -28,7 +28,7 @@ model Sector {
   type      TypeSector @default(IN)
 
   scaleSectors ScaleSector[]
-  Assignments  Assignments[]
+  PinnedException  PinnedException[]
 }
 
 model GroupScale {
@@ -77,10 +77,10 @@ model Cooperators {
   type      CooperatorsType @default(COOPERATOR)
 
   sectorCooperators SectorCooperator[]
-  Assignments       Assignments[]
+  PinnedException       PinnedException[]
 }
 
-model Assignments {
+model PinnedException {
   id            String      @id @default(uuid())
   period        ScalePeriod @default(NIGHT)
   date          String

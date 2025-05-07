@@ -11,8 +11,8 @@ export class CooperatorService {
     return this.repository.create(coop);
   }
 
-  async createAssignment(data) {
-    return this.repository.createAssignment(data);
+  async createPinnedException(data) {
+    return this.repository.createPinnedException(data);
   }
 
   async update(id: string, coop: UpdateCooperatorDto) {
