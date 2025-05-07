@@ -80,13 +80,6 @@ const sectors = [
     type: 'IN',
     id_seeder: 'a6b7c8d9-5e4f-3a2b-0d8c-7e5f3d4a6b2c',
   },
-  {
-    id: 'd0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a',
-    name: 'GA1',
-    quantity: 1,
-    type: 'OUT',
-    id_seeder: 'a6b7c8d9-5e4f-3a2b-0d8c-7e5f3d4a6b2c',
-  },
 ];
 
 export async function sectorMain(tx?) {

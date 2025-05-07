@@ -3,6 +3,7 @@ import { CooperatorRepository } from 'src/modules/cooperator/cooperator.reposito
 import { PrismaService } from '../prisma-service';
 import { CreateCooperatorDto } from 'src/modules/cooperator/dto/create-cooperator-dto';
 import { v4 as uuid } from 'uuid';
+import { UpdateCooperatorDto } from 'src/modules/cooperator/dto/update-cooperator-dto';
 
 @Injectable()
 export class PrismaCooperatorRepository implements CooperatorRepository {
@@ -12,6 +13,28 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
     return await this.prisma.cooperators.create({
       data: {
         id: uuid(),
+        ...coop,
+      },
+    });
+  }
+
+  async createPinnedException(body) {
+    return await this.prisma.pinnedException.create({
+      data: {
+        date: body.date,
+        reason: body.reason,
+        id_sector: body.sector,
+        id_cooperator: body.id_cooperator,
+      },
+    });
+  }
+
+  async update(id: string, coop: UpdateCooperatorDto) {
+    return await this.prisma.cooperators.update({
+      where: {
+        id,
+      },
+      data: {
         ...coop,
       },
     });

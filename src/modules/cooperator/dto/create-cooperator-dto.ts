@@ -1,10 +1,11 @@
-import { IsEnum, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CreateCooperatorDto {
   @IsString()
   name: string;
 
   @IsString()
+  @IsOptional()
   telephone: string;
 
   @IsEnum({
@@ -12,4 +13,7 @@ export class CreateCooperatorDto {
     DEACUN: 'DEACUN',
   })
   type: 'COOPERATOR' | 'DEACUN';
+
+  @IsArray()
+  pinned_exceptions: any[];
 }
