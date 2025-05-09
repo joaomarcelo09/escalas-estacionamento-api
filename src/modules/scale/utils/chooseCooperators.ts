@@ -30,9 +30,9 @@ export const chooseCooperators = ({
   memoryScale.forEach((scale) => {
     scale.sectors.forEach((sec) => {
       sec.cooperators.forEach((coopId) => {
-        if (cooperatorTypeCount.has(coopId)) {
-          const counts = cooperatorTypeCount.get(coopId)!;
-          if (sec.type === 'in') {
+        if (cooperatorTypeCount.has(coopId.id_coop)) {
+          const counts = cooperatorTypeCount.get(coopId.id_coop)!;
+          if (sec.type === 'IN') {
             counts.in++;
           } else {
             counts.out++;
@@ -57,7 +57,7 @@ export const chooseCooperators = ({
 
     // Balance sector type (in/out)
     const balanceFactor =
-      sector.type === 'in' ? counts.out - counts.in : counts.in - counts.out;
+      sector.type === 'IN' ? counts.in - counts.out : counts.out - counts.in;
     priority += balanceFactor * 5;
 
     // Factor in recent participation in opposite sector
@@ -72,6 +72,15 @@ export const chooseCooperators = ({
         }
       });
     });
+
+    for (let i = memoryScale.length - 1; i >= 0; i--) {
+      const hasCoop = memoryScale[i].sectors.some((sec) =>
+        sec.cooperators.some((c) => c.id_coop === coop.id_coop),
+      );
+      if (hasCoop) {
+        priority += 300;
+      }
+    }
 
     // Penalize repeated participation in the same sector type
     let consecutiveCount = 0;
@@ -101,12 +110,16 @@ export const chooseCooperators = ({
   });
 
   // Sort by priority (with a dash of chaos for ties)
-  const orderedPriorityCooperators = cooperatorsWithPriority.sort((a, b) => {
-    if (a.priority === b.priority) {
-      return Math.random() - 0.5;
-    }
-    return b.priority - a.priority;
-  });
+  const orderedPriorityCooperators = cooperatorsWithPriority
+    .map((item) => ({ ...item, _rand: Math.random() })) // sprinkle in randomness for tie-breakers
+    .sort((a, b) => {
+      if (a.priority === b.priority) {
+        return a._rand - b._rand; // use pre-baked chaos
+      }
+      return a.priority - b.priority;
+    })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .map(({ _rand, ...rest }) => rest); // clean up the temporary field
 
   // Pick the lucky few
   const quantityNecessary = sector.quantity - selectedCooperators.length;

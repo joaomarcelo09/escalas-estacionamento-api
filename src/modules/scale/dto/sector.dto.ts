@@ -11,8 +11,8 @@ export class SectorDto {
   name: string;
 
   @IsEnum({
-    out: 'out',
-    in: 'in',
+    out: 'OUT',
+    in: 'IN',
   })
-  type: 'out' | 'in';
+  type: 'IN' | 'OUT';
 }

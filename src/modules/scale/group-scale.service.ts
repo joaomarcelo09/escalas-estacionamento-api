@@ -49,13 +49,16 @@ export class GroupScaleService {
       const sectors = scale.sectors.map((sec) => {
         let choosedCooperators = [];
         let availableCooperators = [];
-        const selectedCooperators = selectCooperator({
+        const { arrayCoop: selectedCooperators, left } = selectCooperator({
           cooperators: body.cooperators,
           scale,
           sector: sec,
         });
 
-        if (!selectedCooperators.length) {
+        if (
+          !selectedCooperators.length ||
+          (selectedCooperators.length && left)
+        ) {
           // filtrar cooperadores para que seja escalado no setor atual
           availableCooperators = filterCooperators({
             cooperators: body.cooperators,
@@ -71,7 +74,7 @@ export class GroupScaleService {
             memoryScale,
             memorySector,
             index,
-          }); // talvez a gente so precise dos ids, ou seja, caso seja possivel, retornar apenas os ids
+          });
         }
 
         choosedCooperators = [...selectedCooperators, ...choosedCooperators];
