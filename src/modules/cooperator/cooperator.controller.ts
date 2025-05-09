@@ -43,7 +43,7 @@ export class CooperatorController {
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() data: UpdateCooperatorDto) {
-    return this.service.update(id, data);
+    return await this.service.update(id, data);
   }
 
   @Delete(':id')

@@ -40,12 +40,33 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
     });
   }
 
+  async updatePinnedException(id: string, data) {
+    return await this.prisma.pinnedException.update({
+      where: {
+        id,
+      },
+      data,
+    });
+  }
+
+  async deletePinnedException(id: string) {
+    return await this.prisma.pinnedException.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
   async delete(id: string) {
     return await this.prisma.cooperators.delete({
       where: {
         id,
       },
     });
+  }
+
+  async findOne({ where, include }) {
+    return await this.prisma.cooperators.findFirst({ where, include });
   }
 
   async findAll({ where }) {
