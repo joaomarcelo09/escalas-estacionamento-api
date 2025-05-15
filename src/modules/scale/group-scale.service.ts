@@ -71,7 +71,7 @@ export class GroupScaleService {
             memoryScale,
             memorySector,
             index,
-          }); // talvez a gente so precise dos ids, ou seja, caso seja possivel, retornar apenas os ids
+          }); 
         }
 
         choosedCooperators = [...selectedCooperators, ...choosedCooperators];
