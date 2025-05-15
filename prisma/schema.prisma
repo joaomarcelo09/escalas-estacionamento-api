@@ -83,7 +83,6 @@ model Cooperators {
 model PinnedException {
   id            String      @id @default(uuid())
   period        ScalePeriod @default(NIGHT)
-  date          String
   reason        String
   id_sector     String
   id_cooperator String

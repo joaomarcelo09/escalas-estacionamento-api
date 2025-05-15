@@ -69,7 +69,7 @@ export class CooperatorService {
     return this.repository.delete(id);
   }
 
-  async findAll({ where }) {
-    return this.repository.findAll({ where });
+  async findAll({ where, include }) {
+    return this.repository.findAll({ where, include });
   }
 }

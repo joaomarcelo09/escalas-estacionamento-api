@@ -54,7 +54,8 @@ export class CooperatorController {
   @Get()
   async findAll() {
     const where = {};
+    const include = {};
 
-    return this.service.findAll({ where });
+    return this.service.findAll({ where, include });
   }
 }
