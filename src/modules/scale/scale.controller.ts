@@ -32,19 +32,19 @@ export class ScaleController {
     };
 
     const includeCooperators = {
-      PinnedException: true
-    }
+      PinnedException: true,
+    };
 
     const cooperators = await this.cooperatorsService.findAll({
       where: whereCooperators,
-      include: includeCooperators
+      include: includeCooperators,
     });
 
     createScaleDto.cooperators = createScaleDto.cooperators.map(
       (coopBody, i) => ({
         ...coopBody,
-        coop_name: cooperators[i].name,
-        pinned_exceptions: cooperators[i]?.PinnedException
+        coop_name: cooperators[i]?.name,
+        pinned_exceptions: cooperators[i]?.PinnedException,
       }),
     );
 
