@@ -26,7 +26,7 @@ export class CooperatorController {
     const createdPinnedExcep = await Promise.all(
       pinned_exceptions.map(async (x) => {
         const pinnedExcepData = {
-          ...x,
+          id_sector: x,
           id_cooperator: createdCooperator.id,
         };
         return this.service.createPinnedException(pinnedExcepData);
@@ -44,6 +44,11 @@ export class CooperatorController {
   @Patch(':id')
   async update(@Param('id') id: string, @Body() data: UpdateCooperatorDto) {
     return await this.service.update(id, data);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return await this.service.findOne(id);
   }
 
   @Delete(':id')

@@ -21,8 +21,7 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
   async createPinnedException(body) {
     return await this.prisma.pinnedException.create({
       data: {
-        reason: body.reason,
-        id_sector: body.sector,
+        id_sector: body.id_sector,
         id_cooperator: body.id_cooperator,
       },
     });
@@ -65,7 +64,8 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
   }
 
   async findOne({ where, include }) {
-    return await this.prisma.cooperators.findFirst({ where, include });
+    const coop = await this.prisma.cooperators.findFirst({ where, include });
+    return coop;
   }
 
   async findAll({ where, include }) {
