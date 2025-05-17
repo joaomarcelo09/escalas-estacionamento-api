@@ -30,8 +30,7 @@ export function filterCooperators({
 
     // Verify if has someone pinned exception on actual scale
     const hasPinnedException = cooperator.pinned_exceptions?.some(
-      (exception) =>
-        exception.sector === sectorId || exception.period === scale.period,
+      (exception) => exception.id_sector === sectorId,
     );
     if (hasPinnedException) return false;
 
