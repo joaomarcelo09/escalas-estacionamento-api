@@ -3,6 +3,7 @@ import { CooperatorRepository } from 'src/modules/cooperator/cooperator.reposito
 import { PrismaService } from '../prisma-service';
 import { CreateCooperatorDto } from 'src/modules/cooperator/dto/create-cooperator-dto';
 import { v4 as uuid } from 'uuid';
+import { UpdateCooperatorDto } from 'src/modules/cooperator/dto/update-cooperator-dto';
 
 @Injectable()
 export class PrismaCooperatorRepository implements CooperatorRepository {
@@ -17,6 +18,43 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
     });
   }
 
+  async createPinnedException(body) {
+    return await this.prisma.pinnedException.create({
+      data: {
+        id_sector: body.id_sector,
+        id_cooperator: body.id_cooperator,
+      },
+    });
+  }
+
+  async update(id: string, coop: UpdateCooperatorDto) {
+    return await this.prisma.cooperators.update({
+      where: {
+        id,
+      },
+      data: {
+        ...coop,
+      },
+    });
+  }
+
+  async updatePinnedException(id: string, data) {
+    return await this.prisma.pinnedException.update({
+      where: {
+        id,
+      },
+      data,
+    });
+  }
+
+  async deletePinnedException(id: string) {
+    return await this.prisma.pinnedException.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
   async delete(id: string) {
     return await this.prisma.cooperators.delete({
       where: {
@@ -25,7 +63,12 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
     });
   }
 
-  async findAll({ where }) {
-    return await this.prisma.cooperators.findMany({ where });
+  async findOne({ where, include }) {
+    const coop = await this.prisma.cooperators.findFirst({ where, include });
+    return coop;
+  }
+
+  async findAll({ where, include }) {
+    return await this.prisma.cooperators.findMany({ where, include });
   }
 }
