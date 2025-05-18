@@ -59,7 +59,9 @@ export class CooperatorController {
   @Get()
   async findAll() {
     const where = {};
-    const include = {};
+    const include = {
+      PinnedException: true,
+    };
 
     return this.service.findAll({ where, include });
   }

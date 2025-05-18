@@ -36,39 +36,35 @@ export class CooperatorService {
       id,
     );
 
-    const updatedCoop = await this.repository.findOne({ where, include });
-
-    return updatedCoop;
+    return this.findOne(id);
   }
 
   async updatePinnedException(excepDB, excepReq, id_coop) {
-    const cond = excepDB.filter((x) => !excepReq.some((end) => end.id == x.id));
+    const del = excepDB.filter(
+      (x) => !excepReq.some((end) => end == x.id_sector),
+    );
 
-    if (cond.length > 0) {
-      // delete
-      cond.map(async (x) => {
-        await this.repository.deletePinnedException(x.id);
+    const add = excepReq.filter(
+      (x) => !excepDB.some((end) => end.id_sector == x),
+    );
+
+    if (add.length) {
+      add.map(async (add_excep) => {
+        const data = {
+          id_cooperator: id_coop,
+          id_sector: add_excep,
+        };
+        await this.repository.createPinnedException(data);
       });
     }
 
-    for (const it of excepReq) {
-      if (it.id && !cond.filter((x) => x.id === it.id).length) {
-        const data = {
-          id_sector: it.id_sector,
-        };
-        await this.repository.updatePinnedException(it.id, data);
-      }
-      if (!it.id) {
-        // createPinnedException
-
-        const data = {
-          id_sector: it.id_sector,
-          id_cooperator: id_coop,
-        };
-
-        await this.repository.createPinnedException(data);
-      }
+    if (del.length) {
+      // delete
+      del.map(async (x) => {
+        return this.repository.deletePinnedException(x.id);
+      });
     }
+
     return;
   }
 
@@ -94,10 +90,20 @@ export class CooperatorService {
       },
     };
 
-    return this.repository.findOne({ where, include });
+    const coop = await this.repository.findOne({ where, include });
+    coop.pinned_exceptions = coop.PinnedException;
+    delete coop.PinnedException;
+
+    return coop;
   }
 
   async findAll({ where, include }) {
-    return this.repository.findAll({ where, include });
+    const cooperators = await this.repository.findAll({ where, include });
+    cooperators.map((coop) => {
+      coop.pinned_exceptions = coop.PinnedException;
+      delete coop.PinnedException;
+    });
+
+    return cooperators;
   }
 }
