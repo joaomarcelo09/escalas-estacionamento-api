@@ -69,6 +69,14 @@ export class CooperatorService {
   }
 
   async delete(id: string) {
+    const coop = await this.findOne(id);
+
+    if (coop.pinned_exceptions.length) {
+      coop.pinned_exceptions.map(async (pin_exc) => {
+        await this.repository.deletePinnedException(pin_exc.id);
+      });
+    }
+
     return this.repository.delete(id);
   }
 
@@ -84,6 +92,8 @@ export class CooperatorService {
             select: {
               id: true,
               name: true,
+              type: true,
+              mode: true,
             },
           },
         },
