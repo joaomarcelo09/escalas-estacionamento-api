@@ -53,27 +53,26 @@ export class ScaleController {
       sectors,
     );
 
-    await Promise.all(
-      dataFormatted.map(async (scale) => {
-        await this.scaleService.create(scale);
+    /*    await Promise.all(*/
+    /*dataFormatted.map(async (scale) => {*/
+    /*await this.scaleService.create(scale);*/
 
-        await Promise.all(
-          scale.sectors.map(async (sector) => {
-            const scaleSectorId = await this.scaleService.createScaleSector(
-              sector,
-              scale.id,
-            );
+    /*await Promise.all(*/
+    /*scale.sectors.map(async (sector) => {*/
+    /*const scaleSectorId = await this.scaleService.createScaleSector(*/
+    /*sector,*/
+    /*scale.id,*/
+    /*);*/
 
-            // Garante que essa operação seja concluída antes da transação ser fechada
-            await this.scaleService.createCoopSectorScale(
-              sector.cooperators,
-              scaleSectorId,
-            );
-          }),
-        );
-      }),
-    );
-    // await $prisma.$transaction(
+    /*// Garante que essa operação seja concluída antes da transação ser fechada*/
+    /*await this.scaleService.createCoopSectorScale(*/
+    /*sector.cooperators,*/
+    /*scaleSectorId,*/
+    /*);*/
+    /*}),*/
+    /*);*/
+    /*}),*/
+    /*    )*/ // await $prisma.$transaction(
     //   async (tx) => {
     //   },
     //   { timeout: 100000 },
