@@ -54,6 +54,7 @@ export class GroupScaleService {
           scale,
           sector: sec,
         });
+        console.log(selectedCooperators, sec.id, 'aqui esta o meliante')
 
         if (!selectedCooperators.length) {
           // filtrar cooperadores para que seja escalado no setor atual
