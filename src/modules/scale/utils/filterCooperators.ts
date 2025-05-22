@@ -34,7 +34,11 @@ export function filterCooperators({
     );
     if (hasPinnedException) return false;
 
-    const hasAssignments = cooperator.assignments.length > 0;
+    const hasAssignments =
+      cooperator.assignments.length > 0 &&
+      cooperator.assignments.some(
+        (assign) => new Date(assign.date).getTime() === scale.date.getTime(),
+      );
 
     if (hasAssignments) return false;
 
