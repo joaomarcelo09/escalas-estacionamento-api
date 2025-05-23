@@ -8,10 +8,10 @@ export class ResponseSectorDto {
   id_sector: number;
 
   @IsEnum({
-    out: 'out',
-    in: 'in',
+    out: 'OUT',
+    in: 'IN',
   })
-  type: 'out' | 'in';
+  type: 'OUT' | 'IN';
 
   @IsArray()
   cooperators: any;

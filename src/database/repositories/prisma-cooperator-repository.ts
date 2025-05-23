@@ -69,6 +69,10 @@ export class PrismaCooperatorRepository implements CooperatorRepository {
   }
 
   async findAll({ where, include }) {
-    return await this.prisma.cooperators.findMany({ where, include });
+    return await this.prisma.cooperators.findMany({
+      where,
+      include,
+      orderBy: { name: 'asc' },
+    });
   }
 }

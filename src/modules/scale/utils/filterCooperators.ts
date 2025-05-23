@@ -37,7 +37,9 @@ export function filterCooperators({
     const hasAssignments =
       cooperator.assignments.length > 0 &&
       cooperator.assignments.some(
-        (assign) => new Date(assign.date).getTime() === scale.date.getTime(),
+        (x) =>
+          (x.date as unknown as string) === scale.date.toISOString() &&
+          x.period === scale.period,
       );
 
     if (hasAssignments) return false;
@@ -45,7 +47,7 @@ export function filterCooperators({
     // Verify if has someone exception on actual scale
     const hasException: boolean = cooperator.exceptions?.some(
       (exception) =>
-        new Date(exception.date).getTime() === scale.date.getTime() && // testar depois
+        new Date(exception.date).getTime() === scale.date.getTime() &&
         exception.period === scale.period,
     );
     return !hasException;
