@@ -10,7 +10,7 @@ export const selectCooperator = ({
   cooperators: CreateCooperatorsScaleDto[];
   scale: ScaleDto;
   sector: SectorDto;
-}): CreateCooperatorsScaleDto[] => {
+}): { arrayCoop: CreateCooperatorsScaleDto[]; left: boolean } => {
   const selectedCooperators: CreateCooperatorsScaleDto[] = [];
 
   // Manter a lógica existente para cooperadores pré-escolhidos
@@ -27,9 +27,12 @@ export const selectCooperator = ({
     selectedCooperators.push(...alreadyChoosedCooperatorsSameSector);
   }
 
-  if (selectedCooperators.length === sector.quantity)
-    return selectedCooperators;
+  if (selectedCooperators.length === sector.quantity) {
+    return { arrayCoop: selectedCooperators, left: false }; // normalize the output
+  }
+
+  const arrayCoop = [...selectedCooperators];
 
   // Fallback: usar seleção aleatória se ainda não tiver cooperadores suficientes
-  return [...selectedCooperators];
+  return { arrayCoop, left: true };
 };

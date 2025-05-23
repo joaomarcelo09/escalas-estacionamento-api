@@ -17,6 +17,7 @@ export class GroupScaleService {
     const memoryScale: ResponseScaleDto[] = [];
     const memorySector: ResponseSectorDto[] = [];
     const days = getWednesdaysAndSundaysInMonth(body.selected_date);
+    console.log(days, 'dates');
 
     const createGroupScale = {
       id: uuid(),
@@ -49,13 +50,17 @@ export class GroupScaleService {
       const sectors = scale.sectors.map((sec) => {
         let choosedCooperators = [];
         let availableCooperators = [];
-        const selectedCooperators = selectCooperator({
+        const { arrayCoop: selectedCooperators, left } = selectCooperator({
           cooperators: body.cooperators,
           scale,
           sector: sec,
         });
+        console.log(selectedCooperators, sec.id, 'aqui esta o meliante');
 
-        if (!selectedCooperators.length) {
+        if (
+          !selectedCooperators.length ||
+          (selectedCooperators.length && left)
+        ) {
           // filtrar cooperadores para que seja escalado no setor atual
           availableCooperators = filterCooperators({
             cooperators: body.cooperators,
@@ -71,7 +76,7 @@ export class GroupScaleService {
             memoryScale,
             memorySector,
             index,
-          }); 
+          });
         }
 
         choosedCooperators = [...selectedCooperators, ...choosedCooperators];

@@ -34,14 +34,20 @@ export function filterCooperators({
     );
     if (hasPinnedException) return false;
 
-    const hasAssignments = cooperator.assignments.length > 0;
+    const hasAssignments =
+      cooperator.assignments.length > 0 &&
+      cooperator.assignments.some(
+        (x) =>
+          (x.date as unknown as string) === scale.date.toISOString() &&
+          x.period === scale.period,
+      );
 
     if (hasAssignments) return false;
 
     // Verify if has someone exception on actual scale
     const hasException: boolean = cooperator.exceptions?.some(
       (exception) =>
-        new Date(exception.date).getTime() === scale.date.getTime() && // testar depois
+        new Date(exception.date).getTime() === scale.date.getTime() &&
         exception.period === scale.period,
     );
     return !hasException;
