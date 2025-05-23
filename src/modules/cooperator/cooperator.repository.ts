@@ -6,5 +6,8 @@ export abstract class CooperatorRepository {
   abstract createPinnedException(data);
   abstract update(id: string, data: UpdateCooperatorDto);
   abstract delete(id: string);
-  abstract findAll(where);
+  abstract findAll({where, include});
+  abstract findOne({ where, include });
+  abstract updatePinnedException(id: string, data);
+  abstract deletePinnedException(id: string);
 }

@@ -17,6 +17,7 @@ export class GroupScaleService {
     const memoryScale: ResponseScaleDto[] = [];
     const memorySector: ResponseSectorDto[] = [];
     const days = getWednesdaysAndSundaysInMonth(body.selected_date);
+    console.log(days, 'dates');
 
     const createGroupScale = {
       id: uuid(),
@@ -54,6 +55,7 @@ export class GroupScaleService {
           scale,
           sector: sec,
         });
+        console.log(selectedCooperators, sec.id, 'aqui esta o meliante');
 
         if (
           !selectedCooperators.length ||

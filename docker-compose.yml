@@ -18,11 +18,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        DATABASE_URL: ${DATABASE_URL}
     container_name: escalasicnv-app
+    env_file: ".env"
     ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=postgresql://admin:123456@postgres:5432/escalasicnvdb?schema=public
+      - "8080:8080"
     networks:
       - app-network
 

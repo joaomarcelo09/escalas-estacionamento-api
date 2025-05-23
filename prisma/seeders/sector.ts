@@ -5,28 +5,28 @@ const $prisma = new PrismaClient();
 const sectors = [
   {
     id: 'e7b8a6e4-8f2b-4b8d-9f2e-1c9b8a6e4f2b',
-    name: 'Fora 1',
+    name: 'PP',
     quantity: 1,
     type: 'OUT',
     id_seeder: 'b5a9c1d3-8e7f-4a2b-9c0d-1e6f5d4c3b8a',
   },
   {
     id: 'a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6',
-    name: 'Fora 2',
+    name: 'PP2',
     quantity: 1,
     type: 'OUT',
     id_seeder: 'f3d8c7b5-6a1e-4b2f-9c0d-7e5a3b4c2d9f',
   },
   {
     id: 'b2c3d4e5-f6a7-8b9c-0d1e-2a3b4c5d6e7f',
-    name: 'Fora 3',
+    name: 'PL',
     quantity: 1,
     type: 'OUT',
     id_seeder: 'c1a9d7e3-5f2b-4b6c-0d8f-9e4a3b2c5d7f',
   },
   {
     id: 'c3d4e5f6-a7b8-9c0d-1e2a-3b4c5d6e7f8a',
-    name: 'Fora 4',
+    name: 'EST1',
     quantity: 1,
     type: 'OUT',
     id_seeder: 'e7f6d3a5-9b2c-4b1e-0d8f-2a6c7b4d5a3f',
@@ -79,6 +79,14 @@ const sectors = [
     quantity: 1,
     type: 'IN',
     id_seeder: 'a6b7c8d9-5e4f-3a2b-0d8c-7e5f3d4a6b2c',
+  },
+  {
+    id: '25a63a2a-155e-486a-8d89-8c2033f31e01',
+    name: 'GA1',
+    quantity: 1,
+    mode: 'SITTING',
+    type: 'IN',
+    id_seeder: '571444d5-0406-4e6f-a359-ab4064ee4f26',
   },
 ];
 

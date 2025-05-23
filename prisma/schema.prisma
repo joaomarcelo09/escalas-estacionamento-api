@@ -26,6 +26,7 @@ model Sector {
   id_seeder String
   quantity  Int
   type      TypeSector @default(IN)
+  mode      ModeSector @default(STANDING)
 
   scaleSectors ScaleSector[]
   PinnedException  PinnedException[]
@@ -82,9 +83,6 @@ model Cooperators {
 
 model PinnedException {
   id            String      @id @default(uuid())
-  period        ScalePeriod @default(NIGHT)
-  date          String
-  reason        String
   id_sector     String
   id_cooperator String
 
@@ -100,6 +98,11 @@ enum CooperatorsType {
 enum TypeSector {
   IN
   OUT
+}
+
+enum ModeSector {
+  STANDING
+  SITTING
 }
 
 enum ScalePeriod {
