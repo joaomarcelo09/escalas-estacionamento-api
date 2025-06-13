@@ -18,6 +18,7 @@ export class GroupScaleService {
     const memoryScale: ResponseScaleDto[] = [];
     const memorySector: ResponseSectorDto[] = [];
     const days = getWednesdaysAndSundaysInMonth(body.selected_date);
+    const departament = body.departament;
 
     const createGroupScale = {
       id: uuid(),
@@ -60,12 +61,14 @@ export class GroupScaleService {
           cooperators: body.cooperators,
           scale,
           sector: sec,
+          days,
+          departament,
         });
 
         if (
           !selectedCooperators.length ||
           (selectedCooperators.length && left) ||
-          departamentSelected.lenght
+          !departamentSelected.length
         ) {
           // filtrar cooperadores para que seja escalado no setor atual
           availableCooperators = filterCooperators({

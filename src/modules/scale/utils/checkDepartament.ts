@@ -6,33 +6,24 @@ export const checkDepartament = ({
   scale,
   cooperators = [],
   sector,
+  days,
+  departament,
 }: {
   cooperators: CreateCooperatorsScaleDto[];
   scale: ScaleDto;
   sector: SectorDto;
+  days;
+  departament;
 }) => {
-  const selectedCooperators: CreateCooperatorsScaleDto[] = [];
+  if (departament == '' || departament == null) return [];
+  const sundays = [];
 
-  // Manter a lógica existente para cooperadores pré-escolhidos
-  const alreadyChoosedCooperatorsSameSector = cooperators.filter((coop) =>
-    coop.assignments.some(
-      (assign) =>
-        assign.sector == sector.id &&
-        new Date(assign.date).getTime() === scale.date.getTime() &&
-        assign.period === scale.period,
-    ),
-  );
+  days.forEach((day) => {
+    if (day.dayOfWeek == 'sunday') {
+      sundays.push(day);
+    }
+  });
+  const last_day = sundays.pop();
 
-  if (alreadyChoosedCooperatorsSameSector.length) {
-    selectedCooperators.push(...alreadyChoosedCooperatorsSameSector);
-  }
-
-  if (selectedCooperators.length === sector.quantity) {
-    return { arrayCoop: selectedCooperators, left: false }; // normalize the output
-  }
-
-  const arrayCoop = [...selectedCooperators];
-
-  // Fallback: usar seleção aleatória se ainda não tiver cooperadores suficientes
-  return arrayCoop;
+  return [];
 };
