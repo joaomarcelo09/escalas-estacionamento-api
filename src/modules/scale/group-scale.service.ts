@@ -65,6 +65,8 @@ export class GroupScaleService {
           departament,
         });
 
+        console.log(departamentSelected, 'dep');
+
         if (
           !selectedCooperators.length ||
           (selectedCooperators.length && left) ||
@@ -88,7 +90,11 @@ export class GroupScaleService {
           });
         }
 
-        choosedCooperators = [...selectedCooperators, ...choosedCooperators];
+        choosedCooperators = [
+          ...selectedCooperators,
+          ...departamentSelected,
+          ...choosedCooperators,
+        ];
 
         const limitedCooperators = choosedCooperators.slice(0, sec.quantity);
 

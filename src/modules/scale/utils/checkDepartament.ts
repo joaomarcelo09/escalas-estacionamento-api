@@ -13,7 +13,7 @@ export const checkDepartament = ({
   scale: ScaleDto;
   sector: SectorDto;
   days;
-  departament;
+  departament: string;
 }) => {
   if (departament == '' || departament == null) return [];
   const sundays = [];
@@ -25,5 +25,8 @@ export const checkDepartament = ({
   });
   const last_day = sundays.pop();
 
+  if (scale.date.getTime() == new Date(last_day.iso).getTime()) {
+    return [{ id_coop: null, coop_name: departament }];
+  }
   return [];
 };
