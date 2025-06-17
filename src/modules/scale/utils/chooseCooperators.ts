@@ -53,7 +53,7 @@ export const chooseCooperators = ({
   const cooperatorsWithPriority = availableCooperators.map((coop) => {
     const counts = cooperatorTypeCount.get(coop.id_coop)!;
     const totalCount = cooperatorTotalCount.get(coop.id_coop)!;
-    let priority = 0;
+    let priority = coop.type === 'COOPERATOR' ? 0 : 600;
 
     // Balance sector type (in/out)
     const balanceFactor =

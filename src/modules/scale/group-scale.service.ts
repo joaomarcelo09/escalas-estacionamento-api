@@ -65,8 +65,6 @@ export class GroupScaleService {
           departament,
         });
 
-        console.log(departamentSelected, 'dep');
-
         if (
           !selectedCooperators.length ||
           (selectedCooperators.length && left) ||
