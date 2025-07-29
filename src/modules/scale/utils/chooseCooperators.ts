@@ -58,8 +58,6 @@ export const chooseCooperators = ({
     const totalCount = cooperatorTotalCount.get(coop.id_coop)!;
     let priority = coop.type === 'COOPERATOR' ? 0 : 5000 * countDiacun;
 
-    console.log(priority)
-
     // Balance sector type (in/out)
     const balanceFactor =
       sector.type === 'IN' ? counts.in - counts.out : counts.out - counts.in;
