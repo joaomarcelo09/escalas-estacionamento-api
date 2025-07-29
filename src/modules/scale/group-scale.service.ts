@@ -8,6 +8,7 @@ import { SectorDto } from './dto/sector.dto';
 import { v4 as uuid } from 'uuid';
 import { ScaleRepository } from './scale.repository';
 import { selectCooperator } from './utils/selectCooperators';
+import { checkDepartament } from './utils/checkDepartament';
 
 @Injectable()
 export class GroupScaleService {
@@ -17,7 +18,7 @@ export class GroupScaleService {
     const memoryScale: ResponseScaleDto[] = [];
     const memorySector: ResponseSectorDto[] = [];
     const days = getWednesdaysAndSundaysInMonth(body.selected_date);
-    console.log(days, 'dates');
+    const departament = body.departament;
 
     const createGroupScale = {
       id: uuid(),
@@ -55,11 +56,19 @@ export class GroupScaleService {
           scale,
           sector: sec,
         });
-        console.log(selectedCooperators, sec.id, 'aqui esta o meliante');
+
+        const departamentSelected = checkDepartament({
+          cooperators: body.cooperators,
+          scale,
+          sector: sec,
+          days,
+          departament,
+        });
 
         if (
           !selectedCooperators.length ||
-          (selectedCooperators.length && left)
+          (selectedCooperators.length && left) ||
+          !departamentSelected.length
         ) {
           // filtrar cooperadores para que seja escalado no setor atual
           availableCooperators = filterCooperators({
@@ -68,6 +77,7 @@ export class GroupScaleService {
             scaleId: id,
             sectorId: sec.id,
             memorySector,
+            nextDate: scales[index + 1]?.date,
           });
 
           choosedCooperators = chooseCooperators({
@@ -79,7 +89,11 @@ export class GroupScaleService {
           });
         }
 
-        choosedCooperators = [...selectedCooperators, ...choosedCooperators];
+        choosedCooperators = [
+          ...selectedCooperators,
+          ...departamentSelected,
+          ...choosedCooperators,
+        ];
 
         const limitedCooperators = choosedCooperators.slice(0, sec.quantity);
 
