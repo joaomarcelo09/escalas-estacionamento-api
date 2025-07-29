@@ -19,6 +19,7 @@ export const chooseCooperators = ({
 
   const cooperatorTypeCount = new Map<string, { in: number; out: number }>();
   const cooperatorTotalCount = new Map<string, number>();
+  let countDiacun = 1;
 
   // Initialize counters
   availableCooperators.forEach((coop) => {
@@ -40,6 +41,8 @@ export const chooseCooperators = ({
           cooperatorTypeCount.set(coopId, counts);
         }
 
+        if (coopId.name.includes('Dc.')) countDiacun++;
+
         if (cooperatorTotalCount.has(coopId)) {
           cooperatorTotalCount.set(
             coopId,
@@ -53,7 +56,9 @@ export const chooseCooperators = ({
   const cooperatorsWithPriority = availableCooperators.map((coop) => {
     const counts = cooperatorTypeCount.get(coop.id_coop)!;
     const totalCount = cooperatorTotalCount.get(coop.id_coop)!;
-    let priority = coop.type === 'COOPERATOR' ? 0 : 600;
+    let priority = coop.type === 'COOPERATOR' ? 0 : 5000 * countDiacun;
+
+    console.log(priority)
 
     // Balance sector type (in/out)
     const balanceFactor =
