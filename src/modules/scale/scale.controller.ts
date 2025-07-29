@@ -45,6 +45,7 @@ export class ScaleController {
         ...coopBody,
         coop_name: cooperators[i]?.name,
         pinned_exceptions: cooperators[i]?.PinnedException,
+        type: cooperators[i]?.type,
       }),
     );
 

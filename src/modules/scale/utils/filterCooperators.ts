@@ -8,12 +8,14 @@ export function filterCooperators({
   sectorId,
   scaleId,
   memorySector,
+  nextDate,
 }: {
   cooperators: CreateCooperatorsScaleDto[];
   scale: ScaleDto;
   sectorId: number;
   scaleId: string;
   memorySector: ResponseSectorDto[];
+  nextDate: Date;
 }) {
   const filteredCooperatorsByException = cooperators.filter((cooperator) => {
     // Verify if cooperator its already scaled on another sector
@@ -38,8 +40,10 @@ export function filterCooperators({
       cooperator.assignments.length > 0 &&
       cooperator.assignments.some(
         (x) =>
-          (x.date as unknown as string) === scale.date.toISOString() &&
-          x.period === scale.period,
+          ((x.date as unknown as string) === scale.date.toISOString() &&
+            x.period === scale.period) ||
+          nextDate ||
+          (x.date as unknown as string) === nextDate?.toISOString(),
       );
 
     if (hasAssignments) return false;
