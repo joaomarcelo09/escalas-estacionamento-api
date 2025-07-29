@@ -58,9 +58,7 @@ export class GroupScaleService {
         });
 
         const departamentSelected = checkDepartament({
-          cooperators: body.cooperators,
           scale,
-          sector: sec,
           days,
           departament,
         });

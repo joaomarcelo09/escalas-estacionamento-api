@@ -1,18 +1,12 @@
-import { CreateCooperatorsScaleDto } from '../dto/create-cooperators.scale.dto';
 import { ScaleDto } from '../dto/scale.dto';
-import { SectorDto } from '../dto/sector.dto';
 
 export const checkDepartament = ({
   scale,
-  cooperators = [],
-  sector,
   days,
   departament,
 }: {
-  cooperators: CreateCooperatorsScaleDto[];
   scale: ScaleDto;
-  sector: SectorDto;
-  days;
+  days: Array<{ iso: Date; dayOfWeek: 'sunday' | 'wednesday' }>;
   departament: string;
 }) => {
   if (departament == '' || departament == null) return [];
@@ -25,7 +19,10 @@ export const checkDepartament = ({
   });
   const last_day = sundays.pop();
 
-  if (scale.date.getTime() == new Date(last_day.iso).getTime()) {
+  if (
+    scale.date.getTime() == new Date(last_day.iso).getTime() &&
+    scale.period === 'night'
+  ) {
     return [{ id_coop: null, coop_name: departament }];
   }
   return [];
