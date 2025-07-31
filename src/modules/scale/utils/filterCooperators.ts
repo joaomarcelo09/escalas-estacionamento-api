@@ -42,8 +42,8 @@ export function filterCooperators({
         (x) =>
           ((x.date as unknown as string) === scale.date.toISOString() &&
             x.period === scale.period) ||
-          nextDate ||
-          (x.date as unknown as string) === nextDate?.toISOString(),
+          (nextDate &&
+            (x.date as unknown as string) === nextDate?.toISOString()),
       );
 
     if (hasAssignments) return false;
