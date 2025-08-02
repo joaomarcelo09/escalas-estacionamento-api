@@ -9,6 +9,7 @@ export function filterCooperators({
   scaleId,
   memorySector,
   nextDate,
+  memoryScale,
 }: {
   cooperators: CreateCooperatorsScaleDto[];
   scale: ScaleDto;
@@ -16,6 +17,7 @@ export function filterCooperators({
   scaleId: string;
   memorySector: ResponseSectorDto[];
   nextDate: Date;
+  memoryScale: any;
 }) {
   const filteredCooperatorsByException = cooperators.filter((cooperator) => {
     // Verify if cooperator its already scaled on another sector
@@ -35,6 +37,22 @@ export function filterCooperators({
       (exception) => exception.id_sector === sectorId,
     );
     if (hasPinnedException) return false;
+
+    let sameDayExcep = false;
+
+    const lastScale = memoryScale[memoryScale.length - 1];
+
+    lastScale?.sectors.forEach((sec) => {
+      if (
+        lastScale.date === scale.date &&
+        lastScale.period !== scale.period &&
+        sec.cooperators.some((c) => c.id_coop === cooperator.id_coop)
+      ) {
+        sameDayExcep = true;
+      }
+    });
+
+    if (sameDayExcep) return false;
 
     const hasAssignments =
       cooperator.assignments.length > 0 &&

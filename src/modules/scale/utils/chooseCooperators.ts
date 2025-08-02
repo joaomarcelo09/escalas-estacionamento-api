@@ -56,7 +56,7 @@ export const chooseCooperators = ({
   const cooperatorsWithPriority = availableCooperators.map((coop) => {
     const counts = cooperatorTypeCount.get(coop.id_coop)!;
     const totalCount = cooperatorTotalCount.get(coop.id_coop)!;
-    let priority = coop.type === 'COOPERATOR' ? 0 : 5000 * countDiacun;
+    let priority = coop.type === 'COOPERATOR' ? 0 : 10000 * countDiacun;
 
     // Balance sector type (in/out)
     const balanceFactor =
@@ -104,10 +104,10 @@ export const chooseCooperators = ({
         break;
       }
     }
-    priority -= consecutiveCount * consecutiveCount * 10;
+    priority += consecutiveCount * consecutiveCount * 10;
 
     // 👇 NEW: Penalize based on total number of times this cooperator has been assigned
-    priority -= totalCount * 2; // Adjust weight as needed
+    priority += totalCount * 2; // Adjust weight as needed
 
     return { priority, data: coop };
   });
