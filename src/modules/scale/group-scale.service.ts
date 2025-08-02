@@ -76,6 +76,7 @@ export class GroupScaleService {
             sectorId: sec.id,
             memorySector,
             nextDate: scales[index + 1]?.date,
+            memoryScale,
           });
 
           choosedCooperators = chooseCooperators({
