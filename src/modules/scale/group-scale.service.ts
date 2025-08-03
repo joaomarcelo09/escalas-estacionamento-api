@@ -84,7 +84,7 @@ export class GroupScaleService {
             sector: sec,
             memoryScale,
             memorySector,
-            index,
+            scaleId: id,
           });
         }
 
