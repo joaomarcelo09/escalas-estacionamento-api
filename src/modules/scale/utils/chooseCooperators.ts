@@ -7,12 +7,14 @@ export const chooseCooperators = ({
   cooperators = [],
   sector,
   memoryScale,
+  memorySector,
+  scaleId,
 }: {
   cooperators: CreateCooperatorsScaleDto[];
   sector: SectorDto;
   memoryScale: ResponseScaleDto[];
   memorySector: ResponseSectorDto[];
-  index: number;
+  scaleId: string;
 }): CreateCooperatorsScaleDto[] => {
   const selectedCooperators: CreateCooperatorsScaleDto[] = [];
   const availableCooperators: CreateCooperatorsScaleDto[] = [...cooperators];
@@ -21,10 +23,24 @@ export const chooseCooperators = ({
   const cooperatorTotalCount = new Map<string, number>();
   let countDiacun = 1;
 
+  const sectorsOfThisScale = memorySector.filter(
+    (sec) => sec.id_scale === scaleId,
+  );
+
   // Initialize counters
   availableCooperators.forEach((coop) => {
     cooperatorTypeCount.set(coop.id_coop, { in: 0, out: 0 });
     cooperatorTotalCount.set(coop.id_coop, 0);
+
+    if (sectorsOfThisScale.length) {
+      const hasDiacunIsThisScale = sectorsOfThisScale.some((sector) =>
+        sector.cooperators.some((cooperator) =>
+          cooperator.name.includes('Dc.'),
+        ),
+      );
+
+      if (hasDiacunIsThisScale) countDiacun++;
+    }
   });
 
   // Count historical participation
@@ -56,7 +72,7 @@ export const chooseCooperators = ({
   const cooperatorsWithPriority = availableCooperators.map((coop) => {
     const counts = cooperatorTypeCount.get(coop.id_coop)!;
     const totalCount = cooperatorTotalCount.get(coop.id_coop)!;
-    let priority = coop.type === 'COOPERATOR' ? 0 : 10000 * countDiacun;
+    let priority = coop.type === 'COOPERATOR' ? 0 : 500 * countDiacun;
 
     // Balance sector type (in/out)
     const balanceFactor =
