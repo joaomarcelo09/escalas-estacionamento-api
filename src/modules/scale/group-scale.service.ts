@@ -61,6 +61,7 @@ export class GroupScaleService {
           scale,
           days,
           departament,
+          is_departament: sec.is_departament,
         });
 
         if (
