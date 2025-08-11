@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { ScaleRepository } from './scale.repository';
 import { selectCooperator } from './utils/selectCooperators';
 import { checkDepartament } from './utils/checkDepartament';
+import { on } from 'events';
 
 @Injectable()
 export class GroupScaleService {
@@ -46,6 +47,8 @@ export class GroupScaleService {
           ],
     );
 
+    const haveLastDayExcept = sectors.length * 2 <= body.cooperators.length;
+
     const data = scales.map((scale, index) => {
       const id = uuid();
       const sectors = scale.sectors.map((sec) => {
@@ -78,6 +81,7 @@ export class GroupScaleService {
             memorySector,
             nextDate: scales[index + 1]?.date,
             memoryScale,
+            haveLastDayExcept,
           });
 
           choosedCooperators = chooseCooperators({
