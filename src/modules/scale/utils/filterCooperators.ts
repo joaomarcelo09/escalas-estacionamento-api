@@ -10,7 +10,7 @@ export function filterCooperators({
   memorySector,
   nextDate,
   memoryScale,
-  haveLastDayExcept,
+  left,
 }: {
   cooperators: CreateCooperatorsScaleDto[];
   scale: ScaleDto;
@@ -19,9 +19,10 @@ export function filterCooperators({
   memorySector: ResponseSectorDto[];
   nextDate: Date;
   memoryScale: any;
-  haveLastDayExcept: boolean
+  left?: boolean;
 }) {
-  const filteredCooperatorsByException = cooperators.filter((cooperator) => {
+
+  let filteredCooperatorsByException = cooperators.filter((cooperator) => {
     // Verify if cooperator its already scaled on another sector
 
     const sectorsOfThisScale = memorySector.filter(
@@ -54,7 +55,7 @@ export function filterCooperators({
       }
     });
 
-    if (lastDayExcep && haveLastDayExcept) return false;
+    if (lastDayExcep && !left) return false;
 
     const hasAssignments =
       cooperator.assignments.length > 0 &&
@@ -76,6 +77,19 @@ export function filterCooperators({
     );
     return !hasException;
   });
+
+  if (!filteredCooperatorsByException.length && !left) {
+    filteredCooperatorsByException = filterCooperators({
+      cooperators,
+      scale,
+      sectorId,
+      scaleId,
+      memorySector,
+      nextDate,
+      memoryScale,
+      left: true,
+    });
+  }
 
   return filteredCooperatorsByException;
 }

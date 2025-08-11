@@ -9,7 +9,6 @@ import { v4 as uuid } from 'uuid';
 import { ScaleRepository } from './scale.repository';
 import { selectCooperator } from './utils/selectCooperators';
 import { checkDepartament } from './utils/checkDepartament';
-import { on } from 'events';
 
 @Injectable()
 export class GroupScaleService {
@@ -33,6 +32,13 @@ export class GroupScaleService {
       minimalCooperators = minimalCooperators + sector.quantity;
     });
 
+    sectors
+      .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+      .sort((a) => {
+        if (a.type === 'IN') return 1;
+        if (a.type === 'OUT') return -1;
+      });
+
     if (body.cooperators.length < minimalCooperators)
       throw new BadRequestException(
         'Não é possível fazer a operação sem a quantidade mínima de cooperadores',
@@ -46,8 +52,6 @@ export class GroupScaleService {
             { date: day.iso, period: 'night', sectors },
           ],
     );
-
-    const haveLastDayExcept = sectors.length * 2 <= body.cooperators.length;
 
     const data = scales.map((scale, index) => {
       const id = uuid();
@@ -81,7 +85,6 @@ export class GroupScaleService {
             memorySector,
             nextDate: scales[index + 1]?.date,
             memoryScale,
-            haveLastDayExcept,
           });
 
           choosedCooperators = chooseCooperators({
@@ -98,6 +101,11 @@ export class GroupScaleService {
           ...departamentSelected,
           ...choosedCooperators,
         ];
+
+        if (!choosedCooperators.length)
+          throw new BadRequestException(
+            'Não há cooperadores o suficiente para montar uma escala',
+          );
 
         const limitedCooperators = choosedCooperators.slice(0, sec.quantity);
 
