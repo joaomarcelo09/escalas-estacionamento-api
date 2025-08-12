@@ -6,7 +6,7 @@ export class CreateCooperatorsScaleDto {
   id_coop: string;
 
   @IsString()
-  type: 'COOPERATOR' | 'DIACUN';
+  type: 'COOPERATOR' | 'DEACUN';
 
   pinned_exceptions: any;
 

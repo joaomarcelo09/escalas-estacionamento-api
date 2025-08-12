@@ -23,7 +23,8 @@ export const checkDepartament = ({
 
   if (
     scale.date.getTime() == new Date(last_day.iso).getTime() &&
-    scale.period === 'night' && is_departament
+    scale.period === 'night' &&
+    is_departament
   ) {
     return [{ id_coop: null, coop_name: departament }];
   }

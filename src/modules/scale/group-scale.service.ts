@@ -117,6 +117,7 @@ export class GroupScaleService {
           cooperators: limitedCooperators.map((coop) => ({
             id_coop: coop.id_coop,
             name: coop.coop_name,
+            type: coop.type,
           })),
         };
 

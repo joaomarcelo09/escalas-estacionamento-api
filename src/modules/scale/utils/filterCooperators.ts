@@ -21,7 +21,6 @@ export function filterCooperators({
   memoryScale: any;
   left?: boolean;
 }) {
-
   let filteredCooperatorsByException = cooperators.filter((cooperator) => {
     // Verify if cooperator its already scaled on another sector
 
