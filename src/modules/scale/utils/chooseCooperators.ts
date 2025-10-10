@@ -34,9 +34,7 @@ export const chooseCooperators = ({
 
     if (sectorsOfThisScale.length) {
       const hasDiacunIsThisScale = sectorsOfThisScale.some((sector) =>
-        sector.cooperators.some((cooperator) =>
-          cooperator.name.includes('Dc.'),
-        ),
+        sector.cooperators.some((cooperator) => cooperator.type === 'DEACUN'),
       );
 
       if (hasDiacunIsThisScale) countDiacun++;
@@ -57,7 +55,7 @@ export const chooseCooperators = ({
           cooperatorTypeCount.set(coopId, counts);
         }
 
-        if (coopId.name.includes('Dc.')) countDiacun++;
+        if (coopId.type === 'DEACUN') countDiacun++;
 
         if (cooperatorTotalCount.has(coopId)) {
           cooperatorTotalCount.set(

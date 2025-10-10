@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class SectorDto {
   @IsNumber()
@@ -15,4 +15,7 @@ export class SectorDto {
     in: 'IN',
   })
   type: 'IN' | 'OUT';
+
+  @IsBoolean()
+  is_departament: boolean;
 }

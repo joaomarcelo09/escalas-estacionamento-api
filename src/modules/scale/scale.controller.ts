@@ -40,14 +40,15 @@ export class ScaleController {
       include: includeCooperators,
     });
 
-    createScaleDto.cooperators = createScaleDto.cooperators.map(
-      (coopBody, i) => ({
+    createScaleDto.cooperators = createScaleDto.cooperators.map((coopBody) => {
+      const coop = cooperators.find((x) => x.id == coopBody.id_coop);
+      return {
         ...coopBody,
-        coop_name: cooperators[i]?.name,
-        pinned_exceptions: cooperators[i]?.PinnedException,
-        type: cooperators[i]?.type,
-      }),
-    );
+        coop_name: coop?.name,
+        pinned_exceptions: coop?.pinned_exceptions,
+        type: coop?.type,
+      };
+    });
 
     const dataFormatted = await this.groupScaleService.generateScale(
       createScaleDto,

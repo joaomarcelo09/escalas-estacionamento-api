@@ -18,7 +18,7 @@ export const selectCooperator = ({
     coop.assignments.some(
       (assign) =>
         assign.sector == sector.id &&
-        new Date(assign.date).getTime() === scale.date.getTime() &&
+        (assign.date as unknown as string) === scale.date.toISOString() &&
         assign.period === scale.period,
     ),
   );

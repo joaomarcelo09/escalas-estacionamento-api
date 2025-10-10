@@ -32,6 +32,13 @@ export class GroupScaleService {
       minimalCooperators = minimalCooperators + sector.quantity;
     });
 
+    sectors
+      .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
+      .sort((a) => {
+        if (a.type === 'IN') return 1;
+        if (a.type === 'OUT') return -1;
+      });
+
     if (body.cooperators.length < minimalCooperators)
       throw new BadRequestException(
         'Não é possível fazer a operação sem a quantidade mínima de cooperadores',
@@ -61,6 +68,7 @@ export class GroupScaleService {
           scale,
           days,
           departament,
+          is_departament: sec.is_departament,
         });
 
         if (
@@ -94,6 +102,11 @@ export class GroupScaleService {
           ...choosedCooperators,
         ];
 
+        if (!choosedCooperators.length)
+          throw new BadRequestException(
+            'Não há cooperadores o suficiente para montar uma escala',
+          );
+
         const limitedCooperators = choosedCooperators.slice(0, sec.quantity);
 
         const bodySector = {
@@ -104,6 +117,7 @@ export class GroupScaleService {
           cooperators: limitedCooperators.map((coop) => ({
             id_coop: coop.id_coop,
             name: coop.coop_name,
+            type: coop.type,
           })),
         };
 

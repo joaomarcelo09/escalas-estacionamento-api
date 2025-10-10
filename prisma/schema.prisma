@@ -21,15 +21,16 @@ model User {
 }
 
 model Sector {
-  id        String     @id @default(uuid())
-  name      String
-  id_seeder String
-  quantity  Int
-  type      TypeSector @default(IN)
-  mode      ModeSector @default(STANDING)
+  id             String     @id @default(uuid())
+  name           String
+  id_seeder      String
+  quantity       Int
+  type           TypeSector @default(IN)
+  mode           ModeSector @default(STANDING)
+  is_departament Boolean    @default(false)
 
-  scaleSectors ScaleSector[]
-  PinnedException  PinnedException[]
+  scaleSectors    ScaleSector[]
+  PinnedException PinnedException[]
 }
 
 model GroupScale {
@@ -78,11 +79,11 @@ model Cooperators {
   type      CooperatorsType @default(COOPERATOR)
 
   sectorCooperators SectorCooperator[]
-  PinnedException       PinnedException[]
+  PinnedException   PinnedException[]
 }
 
 model PinnedException {
-  id            String      @id @default(uuid())
+  id            String @id @default(uuid())
   id_sector     String
   id_cooperator String
 
