@@ -15,7 +15,7 @@ import { PrismaUserRepository } from 'src/database/repositories/prisma-user-repo
     UserModule,
     JwtModule.register({
       global: true,
-      secret: '123456',
+      secret: process.env.SECRET,
       signOptions: { expiresIn: '24h' },
     }),
   ],

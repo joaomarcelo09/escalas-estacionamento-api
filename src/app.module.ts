@@ -13,15 +13,32 @@ import { CooperatorService } from './modules/cooperator/cooperator.service';
 import { CooperatorRepository } from './modules/cooperator/cooperator.repository';
 import { PrismaCooperatorRepository } from './database/repositories/prisma-cooperator-repository';
 import { SectorModule } from './modules/sector/sector.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { AuthService } from './modules/auth/auth.service';
+import { UserService } from './modules/user/user.service';
+import { UserRepository } from './modules/user/user.repository';
+import { PrismaUserRepository } from './database/repositories/prisma-user-repository';
 
 @Module({
-  imports: [UserModule, CooperatorModule, ScaleModule, SectorModule],
+  imports: [
+    UserModule,
+    CooperatorModule,
+    ScaleModule,
+    SectorModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
     PrismaService,
     CooperatorService,
     SectorService,
+    AuthService,
+    UserService,
+    {
+      provide: UserRepository,
+      useClass: PrismaUserRepository,
+    },
     {
       provide: SectorRepository,
       useClass: PrismaSectorRepository,
