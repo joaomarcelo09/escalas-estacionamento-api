@@ -4,7 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { comparePassword } from 'src/helpers/security/bcrypt';
+import { comparePassword, HashPassword } from 'src/helpers/security/bcrypt';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,23 @@ export class AuthService {
   ) {}
 
   async register(user: CreateUserDto) {
+    const user_id = uuid();
+
+    user.id = user_id;
+
+    const refresh_payload = {
+      sub: user_id,
+      email: user.email,
+      name: user.name,
+    };
+
+    const refresh_token = await this.jwt.signAsync(refresh_payload, {
+      secret: process.env.JWT_REFRESH_SECRET,
+      expiresIn: '7d',
+    });
+
+    user.refresh_token = await HashPassword(refresh_token);
+
     const newUser = await this.userService.create(user);
 
     const payload = {
@@ -25,6 +43,7 @@ export class AuthService {
     return {
       payload,
       access_token: await this.jwt.signAsync(payload),
+      refresh_token,
     };
   }
 
@@ -36,15 +55,66 @@ export class AuthService {
     if (!findUser)
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
-    if (!comparePassword(user.password, findUser.password))
-      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
-
     const payload = {
       sub: findUser.id,
       email: findUser.email,
       name: findUser.name,
     };
 
-    return { payload, access_token: await this.jwt.signAsync(payload) };
+    const refresh_token = await this.jwt.signAsync(payload, {
+      secret: process.env.JWT_REFRESH_SECRET,
+      expiresIn: '7d',
+    });
+
+    findUser.refresh_token = await HashPassword(refresh_token);
+
+    await this.userService.update(findUser);
+
+    if (!comparePassword(user.password, findUser.password))
+      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+
+    return {
+      payload,
+      access_token: await this.jwt.signAsync(payload),
+      refresh_token,
+    };
+  }
+
+  async refreshToken(refreshToken: string) {
+    try {
+      const decoded = await this.jwt.verifyAsync(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
+
+      const user = await this.userService.findOne({
+        where: { id: decoded.sub },
+      });
+      if (!user)
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+      const isValid = await comparePassword(refreshToken, user.refresh_token);
+      if (!isValid)
+        throw new HttpException(
+          'Invalid refresh token',
+          HttpStatus.UNAUTHORIZED,
+        );
+
+      const payload = {
+        sub: user.id,
+        email: user.email,
+        name: user.name,
+      };
+
+      const access_token = await this.jwt.signAsync(payload, {
+        secret: process.env.JWT_SECRET,
+        expiresIn: '15m',
+      });
+
+      return {
+        access_token,
+      };
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
+    }
   }
 }

@@ -3,7 +3,6 @@ import { PrismaService } from 'src/database/prisma-service';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
 import { HashPassword } from 'src/helpers/security/bcrypt';
-import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -14,7 +13,17 @@ export class PrismaUserRepository implements UserRepository {
 
     return await this.prisma.user.create({
       data: {
-        id: uuid(),
+        ...user,
+      },
+    });
+  }
+
+  async update(user) {
+    return await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
         ...user,
       },
     });

@@ -9,4 +9,7 @@ export class CreateUserDto {
 
   @IsString()
   password: string;
+
+  refresh_token: string;
+  id: string;
 }
