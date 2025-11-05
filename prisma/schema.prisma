@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,82 +8,71 @@ datasource db {
 }
 
 model User {
-  id       String @id
-  name     String
-  email    String
-  password String
+  id            String @id
+  name          String
+  email         String
+  password      String
   refresh_token String
 }
 
 model Sector {
-  id             String     @id @default(uuid())
-  name           String
-  id_seeder      String?
-  quantity       Int
-  type           TypeSector @default(IN)
-  mode           ModeSector @default(STANDING)
-  is_departament Boolean    @default(false)
-
-  scaleSectors    ScaleSector[]
+  id              String            @id @default(uuid())
+  name            String
+  id_seeder       String?
+  quantity        Int
+  type            TypeSector        @default(IN)
+  mode            ModeSector        @default(STANDING)
+  is_departament  Boolean           @default(false)
   PinnedException PinnedException[]
+  scaleSectors    ScaleSector[]
 }
 
 model GroupScale {
-  id   String @id @default(uuid())
-  name String
-
+  id     String  @id @default(uuid())
+  name   String
   scales Scale[]
 }
 
 model Scale {
-  id             String      @id @default(uuid())
+  id             String        @id @default(uuid())
   id_group_scale String
-  period         ScalePeriod @default(NIGHT)
-
-  groupScale GroupScale @relation(fields: [id_group_scale], references: [id])
-
-  scaleSectors ScaleSector[]
+  period         ScalePeriod   @default(NIGHT)
+  groupScale     GroupScale    @relation(fields: [id_group_scale], references: [id])
+  scaleSectors   ScaleSector[]
 }
 
 model ScaleSector {
-  id        String @id @default(uuid())
-  id_scale  String
-  id_sector String
-
-  scale Scale @relation(fields: [id_scale], references: [id])
-
-  sector Sector @relation(fields: [id_sector], references: [id])
-
+  id                String             @id @default(uuid())
+  id_scale          String
+  id_sector         String
+  scale             Scale              @relation(fields: [id_scale], references: [id])
+  sector            Sector             @relation(fields: [id_sector], references: [id])
   sectorCooperators SectorCooperator[]
 }
 
 model SectorCooperator {
-  id              String @id @default(uuid())
+  id              String      @id @default(uuid())
   id_scale_sector String
   id_cooperator   String
-
-  scaleSector ScaleSector @relation(fields: [id_scale_sector], references: [id])
-
-  cooperator Cooperators @relation(fields: [id_cooperator], references: [id])
+  cooperator      Cooperators @relation(fields: [id_cooperator], references: [id])
+  scaleSector     ScaleSector @relation(fields: [id_scale_sector], references: [id])
 }
 
 model Cooperators {
-  id        String          @id @default(uuid())
-  name      String
-  telephone String?
-  type      CooperatorsType @default(COOPERATOR)
-
-  sectorCooperators SectorCooperator[]
+  id                String             @id @default(uuid())
+  name              String
+  telephone         String?
+  type              CooperatorsType    @default(COOPERATOR)
   PinnedException   PinnedException[]
+  sectorCooperators SectorCooperator[]
 }
 
 model PinnedException {
-  id            String @id @default(uuid())
+  id            String      @id @default(uuid())
   id_sector     String
   id_cooperator String
-
-  sector     Sector      @relation(fields: [id_sector], references: [id])
-  cooperator Cooperators @relation(fields: [id_cooperator], references: [id])
+  cooperator    Cooperators @relation(fields: [id_cooperator], references: [id])
+  sector        Sector      @relation(fields: [id_sector], references: [id])
 }
 
 enum CooperatorsType {

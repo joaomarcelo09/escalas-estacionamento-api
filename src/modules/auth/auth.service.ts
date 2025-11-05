@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { UserService } from 'src/modules/user/user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -15,6 +15,13 @@ export class AuthService {
   ) {}
 
   async register(user: CreateUserDto) {
+    const existentUser = await this.userService.findOne({
+      where: { email: user.email },
+    });
+
+    if (existentUser)
+      throw new ConflictException('Um usuário com esse email já existe');
+
     const user_id = uuid();
 
     user.id = user_id;
@@ -43,7 +50,6 @@ export class AuthService {
     return {
       payload,
       access_token: await this.jwt.signAsync(payload),
-      refresh_token,
     };
   }
 
@@ -76,7 +82,6 @@ export class AuthService {
     return {
       payload,
       access_token: await this.jwt.signAsync(payload),
-      refresh_token,
     };
   }
 

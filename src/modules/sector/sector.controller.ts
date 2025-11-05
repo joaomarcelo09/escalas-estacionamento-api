@@ -10,7 +10,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { SectorService } from './sector.service';
-import { UpdateCooperatorDto } from '../cooperator/dto/update-cooperator-dto';
 import { CreateSectorDto } from './dto/create-sector-dto';
 import { UpdateSectorDto } from './dto/update-sector-dto';
 
