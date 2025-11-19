@@ -30,14 +30,12 @@ export class AuthService {
       expiresIn: '7d',
     });
 
-    user.refresh_token = await HashPassword(refresh_token);
-
-    const newUser = await this.userService.create(user);
+    const new_user = await this.userService.create(user);
 
     const payload = {
-      sub: newUser.id,
-      email: newUser.email,
-      name: newUser.name,
+      sub: new_user.id,
+      email: new_user.email,
+      name: new_user.name,
     };
 
     return {
@@ -55,6 +53,9 @@ export class AuthService {
     if (!findUser)
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
+    if (!comparePassword(user.password, findUser.password))
+      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+
     const payload = {
       sub: findUser.id,
       email: findUser.email,
@@ -66,13 +67,6 @@ export class AuthService {
       expiresIn: '7d',
     });
 
-    findUser.refresh_token = await HashPassword(refresh_token);
-
-    await this.userService.update(findUser);
-
-    if (!comparePassword(user.password, findUser.password))
-      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
-
     return {
       payload,
       access_token: await this.jwt.signAsync(payload),
@@ -80,15 +74,21 @@ export class AuthService {
     };
   }
 
-  async refreshToken(refreshToken: string) {
+  async refreshToken(refreshToken: string | undefined) {
     try {
+      if (!refreshToken)
+        throw new HttpException(
+          'Refresh token missing',
+          HttpStatus.UNAUTHORIZED,
+        );
+
       const decoded = await this.jwt.verifyAsync(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
       });
-
       const user = await this.userService.findOne({
         where: { id: decoded.sub },
       });
+
       if (!user)
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
