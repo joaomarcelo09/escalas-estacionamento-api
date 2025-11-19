@@ -6,6 +6,5 @@ export async function HashPassword(password: string) {
 }
 
 export async function comparePassword(password: string, hashPass: string) {
-  const comparePass = await compare(password, hashPass);
-  return comparePass;
+  return compare(password, hashPass);
 }
