@@ -31,7 +31,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      path: '/auth/refresh-token',
+      path: '/',
       maxAge: 45 * 24 * 60 * 60 * 1000,
     });
     return response;
@@ -49,7 +49,7 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      path: '/auth/refresh-token',
+      path: '/',
       maxAge: 45 * 24 * 60 * 60 * 1000,
     });
     return response;

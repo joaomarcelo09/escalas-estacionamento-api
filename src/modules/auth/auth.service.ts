@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/modules/user/user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -90,19 +90,15 @@ export class AuthService {
       const decoded = await this.jwt.verifyAsync(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
       });
+
+      if (!decoded) throw new UnauthorizedException();
+
       const user = await this.userService.findOne({
         where: { id: decoded.sub },
       });
 
       if (!user)
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-
-      const isValid = await comparePassword(refreshToken, user.refresh_token);
-      if (!isValid)
-        throw new HttpException(
-          'Invalid refresh token',
-          HttpStatus.UNAUTHORIZED,
-        );
 
       const payload = {
         sub: user.id,
