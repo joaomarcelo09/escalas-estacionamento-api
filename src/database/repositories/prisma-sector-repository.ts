@@ -20,6 +20,7 @@ export class PrismaSectorRepository implements SectorRepository {
       data: {
         id: uuid(),
         id_seeder: null,
+        quantity: 1,
         ...data,
       },
     });
