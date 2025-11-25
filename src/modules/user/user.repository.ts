@@ -11,4 +11,5 @@ type findParams = {
 export abstract class UserRepository {
   abstract create(user: CreateUserDto);
   abstract findOne({ where }: findParams);
+  abstract update(user);
 }

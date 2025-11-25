@@ -18,12 +18,13 @@ model User {
   name     String
   email    String
   password String
+  refresh_token String?
 }
 
 model Sector {
   id             String     @id @default(uuid())
   name           String
-  id_seeder      String
+  id_seeder      String?
   quantity       Int
   type           TypeSector @default(IN)
   mode           ModeSector @default(STANDING)

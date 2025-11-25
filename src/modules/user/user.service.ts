@@ -13,4 +13,8 @@ export class UserService {
   async findOne({ where }) {
     return await this.repository.findOne({ where });
   }
+
+  async update(data) {
+    return await this.repository.update(data);
+  }
 }
