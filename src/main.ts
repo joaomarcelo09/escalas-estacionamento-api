@@ -10,8 +10,8 @@ async function bootstrap() {
     credentials: true,
     origin: [
       'http://localhost:5173',
-      'https://escalas-estacionamento-ui.vercel.app/',
-      'https://escalas-estacionamento-ui-git-develop-juliaams-projects.vercel.app/',
+      'https://escalas-estacionamento-ui.vercel.app',
+      'https://escalas-estacionamento-ui-git-develop-juliaams-projects.vercel.app',
     ],
   });
 
