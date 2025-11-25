@@ -58,8 +58,7 @@ export class AuthService {
       findUser.password,
     );
 
-    if (!isEqualPassword)
-      throw new HttpException('Senha inválida', HttpStatus.UNAUTHORIZED);
+    if (!isEqualPassword) throw new UnauthorizedException('Senha inválida');
 
     const payload = {
       sub: findUser.id,
@@ -81,11 +80,7 @@ export class AuthService {
 
   async refreshToken(refreshToken: string | undefined) {
     try {
-      if (!refreshToken)
-        throw new HttpException(
-          'Refresh token missing',
-          HttpStatus.UNAUTHORIZED,
-        );
+      if (!refreshToken) throw new UnauthorizedException();
 
       const decoded = await this.jwt.verifyAsync(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
@@ -115,7 +110,7 @@ export class AuthService {
         access_token,
       };
     } catch (e) {
-      throw new HttpException(e, HttpStatus.UNAUTHORIZED);
+      return e;
     }
   }
 }
