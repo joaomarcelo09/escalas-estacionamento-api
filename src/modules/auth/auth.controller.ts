@@ -17,7 +17,6 @@ import { LoginUserDto } from './dto/login-user.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @HttpCode(HttpStatus.OK)
   @Public()
   @Post('register')
   async register(
@@ -37,7 +36,6 @@ export class AuthController {
     return response;
   }
 
-  @HttpCode(HttpStatus.OK)
   @Public()
   @Post('login')
   async login(
@@ -55,16 +53,13 @@ export class AuthController {
     return response;
   }
 
-  @HttpCode(HttpStatus.OK)
   @Public()
   @Post('refresh-token')
   async refresh_token(@Req() req) {
     const refreshToken = req.cookies['refresh_token'];
-    const response = await this.authService.refreshToken(refreshToken);
-    return response;
+    return await this.authService.refreshToken(refreshToken);
   }
 
-  @HttpCode(HttpStatus.OK)
   @Post('validate-token')
   async validate_token() {
     return true;
