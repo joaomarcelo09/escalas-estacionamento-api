@@ -42,4 +42,13 @@ export class PrismaSectorRepository implements SectorRepository {
       },
     });
   }
+
+  async deletePinnedException(id: string) {
+    return await this.prisma.pinnedException.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
 }
