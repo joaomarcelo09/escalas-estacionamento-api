@@ -17,6 +17,24 @@ export class SectorService {
   }
 
   async delete(id: string) {
+    const where = {
+      id,
+    };
+
+    const include = {
+      PinnedException: true,
+    };
+
+    const sector = await this.findOne(where, include);
+
+    if (sector.PinnedException?.length) {
+      await Promise.all(
+        sector.PinnedException.map((x) =>
+          this.repository.deletePinnedException(x.id),
+        ),
+      );
+    }
+
     return await this.repository.delete(id);
   }
 
