@@ -68,7 +68,7 @@ export class AuthService {
 
     const refresh_token = await this.jwt.signAsync(payload, {
       secret: process.env.JWT_REFRESH_SECRET,
-      expiresIn: '7d',
+      expiresIn: '1m',
     });
 
     return {
@@ -79,33 +79,38 @@ export class AuthService {
   }
 
   async refreshToken(refreshToken: string | undefined) {
-    if (!refreshToken) throw new UnauthorizedException();
+    try {
+      if (!refreshToken) throw new UnauthorizedException();
 
-    const decoded = await this.jwt.verifyAsync(refreshToken, {
-      secret: process.env.JWT_REFRESH_SECRET,
-    });
+      const decoded = await this.jwt.verifyAsync(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET,
+      });
 
-    if (!decoded) throw new UnauthorizedException();
+      if (!decoded) throw new UnauthorizedException();
 
-    const user = await this.userService.findOne({
-      where: { id: decoded.sub },
-    });
+      const user = await this.userService.findOne({
+        where: { id: decoded.sub },
+      });
 
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      if (!user)
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      name: user.name,
-    };
+      const payload = {
+        sub: user.id,
+        email: user.email,
+        name: user.name,
+      };
 
-    const access_token = await this.jwt.signAsync(payload, {
-      secret: process.env.JWT_SECRET,
-      expiresIn: '15m',
-    });
+      const access_token = await this.jwt.signAsync(payload, {
+        secret: process.env.JWT_SECRET,
+        expiresIn: '15m',
+      });
 
-    return {
-      access_token,
-    };
+      return {
+        access_token,
+      };
+    } catch {
+      throw new UnauthorizedException();
+    }
   }
 }
