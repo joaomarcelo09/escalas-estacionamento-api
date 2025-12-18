@@ -28,4 +28,6 @@ export class CreateSectorDto {
 
   @IsBoolean()
   is_departament: boolean;
+
+  id_app_type: string;
 }

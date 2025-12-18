@@ -15,12 +15,10 @@ export class AuthService {
   ) {}
 
   async register(user: CreateUserDto) {
-    const user_id = uuid();
-
-    user.id = user_id;
+    user.id = uuid();
 
     const refresh_payload = {
-      sub: user_id,
+      sub: user.id,
       email: user.email,
       name: user.name,
     };
@@ -36,6 +34,7 @@ export class AuthService {
       sub: new_user.id,
       email: new_user.email,
       name: new_user.name,
+      app_type: new_user.id_app_type,
     };
 
     return {
@@ -64,6 +63,7 @@ export class AuthService {
       sub: findUser.id,
       email: findUser.email,
       name: findUser.name,
+      app_type: findUser.id_app_type,
     };
 
     const refresh_token = await this.jwt.signAsync(payload, {
