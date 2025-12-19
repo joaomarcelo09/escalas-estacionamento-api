@@ -4,8 +4,8 @@ import { SectorRepository } from './sector.repository';
 @Injectable()
 export class SectorService {
   constructor(private repository: SectorRepository) {}
-  async findAll() {
-    return await this.repository.findAll();
+  async findAll({ where }) {
+    return await this.repository.findAll({ where });
   }
 
   async findOne(where, include) {
@@ -16,9 +16,10 @@ export class SectorService {
     return await this.repository.create(data);
   }
 
-  async delete(id: string) {
+  async delete(id: string, id_app_type: string) {
     const where = {
       id,
+      id_app_type,
     };
 
     const include = {

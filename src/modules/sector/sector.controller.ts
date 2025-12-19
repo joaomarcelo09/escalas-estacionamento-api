@@ -10,9 +10,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { SectorService } from './sector.service';
-import { UpdateCooperatorDto } from '../cooperator/dto/update-cooperator-dto';
 import { CreateSectorDto } from './dto/create-sector-dto';
 import { UpdateSectorDto } from './dto/update-sector-dto';
+import { User } from '../user/user.decorator';
 
 @Controller('sector')
 export class SectorController {
@@ -20,12 +20,18 @@ export class SectorController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  async findAll() {
-    return this.service.findAll();
+  async findAll(@User() user) {
+    const where = {
+      id_app_type: user.app_type,
+    };
+
+    return this.service.findAll({ where });
   }
 
   @Post()
-  async create(@Body() data: CreateSectorDto) {
+  async create(@Body() data: CreateSectorDto, @User() user) {
+    data.id_app_type = user.app_type;
+
     return await this.service.create(data);
   }
 
@@ -35,9 +41,10 @@ export class SectorController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string, @User() user) {
     const where = {
       id,
+      id_app_type: user.app_type,
     };
 
     const include = {};
@@ -46,7 +53,7 @@ export class SectorController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return this.service.delete(id);
+  async delete(@Param('id') id: string, @User() user) {
+    return this.service.delete(id, user.app_type);
   }
 }

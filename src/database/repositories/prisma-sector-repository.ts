@@ -7,8 +7,8 @@ import { v4 as uuid } from 'uuid';
 export class PrismaSectorRepository implements SectorRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return await this.prisma.sector.findMany();
+  async findAll({ where }) {
+    return await this.prisma.sector.findMany({ where });
   }
 
   async findOne({ where, include }) {
@@ -50,5 +50,4 @@ export class PrismaSectorRepository implements SectorRepository {
       },
     });
   }
-
 }
