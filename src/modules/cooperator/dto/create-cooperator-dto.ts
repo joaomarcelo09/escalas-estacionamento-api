@@ -16,4 +16,6 @@ export class CreateCooperatorDto {
 
   @IsArray()
   pinned_exceptions: any[];
+
+  id_app_type: string;
 }
