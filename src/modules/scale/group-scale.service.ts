@@ -32,12 +32,12 @@ export class GroupScaleService {
       minimalCooperators = minimalCooperators + sector.quantity;
     });
 
-    sectors
-      .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
-      .sort((a) => {
-        if (a.type === 'IN') return 1;
-        if (a.type === 'OUT') return -1;
-      });
+    sectors.sort((a, b) => {
+      if (a.type !== b.type) {
+        return a.type === 'OUT' ? -1 : 1;
+      }
+      return a.name.localeCompare(b.name, 'pt-BR');
+    });
 
     if (body.cooperators.length < minimalCooperators)
       throw new BadRequestException(
