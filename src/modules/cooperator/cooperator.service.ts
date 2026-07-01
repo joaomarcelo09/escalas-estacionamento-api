@@ -36,7 +36,7 @@ export class CooperatorService {
       id,
     );
 
-    return this.findOne(id);
+    return this.findOne(id, coopDB.id_app_type);
   }
 
   async updatePinnedException(excepDB, excepReq, id_coop) {
@@ -68,8 +68,8 @@ export class CooperatorService {
     return;
   }
 
-  async delete(id: string) {
-    const coop = await this.findOne(id);
+  async delete(id: string, user) {
+    const coop = await this.findOne(id, user.app_type);
 
     if (coop.pinned_exceptions.length) {
       coop.pinned_exceptions.map(async (pin_exc) => {
@@ -80,9 +80,10 @@ export class CooperatorService {
     return this.repository.delete(id);
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, id_app_type: string) {
     const where = {
       id,
+      id_app_type,
     };
     const include = {
       PinnedException: {

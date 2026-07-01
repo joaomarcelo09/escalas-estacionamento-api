@@ -14,11 +14,23 @@ datasource db {
 }
 
 model User {
-  id       String @id
-  name     String
-  email    String
-  password String
+  id            String  @id
+  name          String
+  email         String
+  password      String
   refresh_token String?
+  id_app_type   String?
+
+  app_type AppType? @relation(fields: [id_app_type], references: [id])
+}
+
+model AppType {
+  id          String        @id
+  value       AppTypeEnum   @default(ESTACIONAMENTO)
+  id_seeder   String?
+  User        User[]
+  Sector      Sector[]
+  Cooperators Cooperators[]
 }
 
 model Sector {
@@ -29,7 +41,9 @@ model Sector {
   type           TypeSector @default(IN)
   mode           ModeSector @default(STANDING)
   is_departament Boolean    @default(false)
+  id_app_type    String?
 
+  app_type        AppType?           @relation(fields: [id_app_type], references: [id])
   scaleSectors    ScaleSector[]
   PinnedException PinnedException[]
 }
@@ -74,10 +88,13 @@ model SectorCooperator {
 }
 
 model Cooperators {
-  id        String          @id @default(uuid())
-  name      String
-  telephone String?
-  type      CooperatorsType @default(COOPERATOR)
+  id          String          @id @default(uuid())
+  name        String
+  telephone   String?
+  type        CooperatorsType @default(COOPERATOR)
+  id_app_type String?
+
+  app_type AppType? @relation(fields: [id_app_type], references: [id])
 
   sectorCooperators SectorCooperator[]
   PinnedException   PinnedException[]
@@ -90,6 +107,11 @@ model PinnedException {
 
   sector     Sector      @relation(fields: [id_sector], references: [id])
   cooperator Cooperators @relation(fields: [id_cooperator], references: [id])
+}
+
+enum AppTypeEnum {
+  DOCE
+  ESTACIONAMENTO
 }
 
 enum CooperatorsType {

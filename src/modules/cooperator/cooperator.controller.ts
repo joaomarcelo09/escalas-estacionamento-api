@@ -10,14 +10,16 @@ import {
 import { CooperatorService } from './cooperator.service';
 import { CreateCooperatorDto } from './dto/create-cooperator-dto';
 import { UpdateCooperatorDto } from './dto/update-cooperator-dto';
+import { User } from '../user/user.decorator';
 
 @Controller('cooperator')
 export class CooperatorController {
   constructor(private service: CooperatorService) {}
 
   @Post()
-  async create(@Body() data: CreateCooperatorDto) {
+  async create(@Body() data: CreateCooperatorDto, @User() user) {
     const pinned_exceptions = data.pinned_exceptions;
+    data.id_app_type = user.app_type;
 
     delete data.pinned_exceptions;
 
@@ -47,18 +49,20 @@ export class CooperatorController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.service.findOne(id);
+  async findOne(@Param('id') id: string, @User() user) {
+    return await this.service.findOne(id, user.app_type);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return this.service.delete(id);
+  async delete(@Param('id') id: string, @User() user) {
+    return this.service.delete(id, user);
   }
 
   @Get()
-  async findAll() {
-    const where = {};
+  async findAll(@User() user) {
+    const where = {
+      id_app_type: user.app_type,
+    };
     const include = {
       PinnedException: true,
     };

@@ -1,5 +1,5 @@
 export abstract class SectorRepository {
-  abstract findAll();
+  abstract findAll({ where });
   abstract findOne({ where, include });
   abstract create(data);
   abstract update(id, data);

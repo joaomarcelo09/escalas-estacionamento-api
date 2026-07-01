@@ -3,11 +3,8 @@ import { ScaleService } from './scale.service';
 import { CreateScaleDto } from './dto/create-scale.dto';
 import { GroupScaleService } from './group-scale.service';
 import { SectorService } from '../sector/sector.service';
-// import { PrismaClient } from '@prisma/client';
-// import { timeout } from 'rxjs';
 import { CooperatorService } from '../cooperator/cooperator.service';
-
-// const $prisma = new PrismaClient();
+import { User } from '../user/user.decorator';
 
 @Controller('scale')
 export class ScaleController {
@@ -19,8 +16,11 @@ export class ScaleController {
   ) {}
 
   @Post()
-  async create(@Body() createScaleDto: CreateScaleDto) {
-    const sectors = await this.sectorService.findAll();
+  async create(@Body() createScaleDto: CreateScaleDto, @User() user) {
+    const where = {
+      id_app_type: user.app_type,
+    };
+    const sectors = await this.sectorService.findAll({ where });
 
     const idCooperatorsBody = createScaleDto.cooperators.map(
       (coop) => coop.id_coop,
